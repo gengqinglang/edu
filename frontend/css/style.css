@@ -768,9 +768,10 @@ body {
 .path-card {
     background: var(--gray-50);
     border-radius: var(--radius-lg);
-    padding: var(--spacing-lg);
+    padding: 0;
     border-left: 4px solid var(--gray-300);
     transition: all 0.2s ease-in-out;
+    margin-bottom: var(--spacing-md);
 }
 
 .path-card:hover {
@@ -788,6 +789,112 @@ body {
 .path-card.infeasible {
     border-left-color: var(--error-color);
     background: rgba(239, 68, 68, 0.05);
+}
+
+/* 路径卡片展开收起样式 */
+.path-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    background: var(--white);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border: none;
+    margin-bottom: 0;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.path-card.collapsed .path-header {
+    border-radius: var(--radius-lg);
+}
+
+.path-header:hover {
+    background: var(--gray-50);
+    box-shadow: var(--shadow-sm);
+}
+
+.path-title-section h4 {
+    margin: 0 0 var(--spacing-xs) 0;
+    color: var(--gray-900);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+}
+
+.path-description {
+    color: var(--gray-600);
+    font-size: var(--font-size-sm);
+    margin: 0;
+}
+
+.path-summary {
+    display: flex;
+    gap: var(--spacing-lg);
+    align-items: center;
+}
+
+.path-summary-item {
+    text-align: center;
+}
+
+.summary-label {
+    display: block;
+    font-size: var(--font-size-xs);
+    color: var(--gray-500);
+    margin-bottom: 2px;
+}
+
+.summary-value {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+.path-toggle-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--gray-100);
+    transition: all 0.2s ease-in-out;
+}
+
+.toggle-arrow {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    transition: transform 0.2s ease-in-out;
+}
+
+.path-card.expanded .toggle-arrow {
+    transform: rotate(180deg);
+}
+
+.path-card.collapsed .toggle-arrow {
+    transform: rotate(0deg);
+}
+
+.path-content {
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    padding: 0 var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
+}
+
+.path-card.collapsed .path-content {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.path-card.expanded .path-content {
+    max-height: 2000px;
+    opacity: 1;
+    margin-top: var(--spacing-sm);
+    padding-top: var(--spacing-md);
 }
 
 /* 路径步骤 */

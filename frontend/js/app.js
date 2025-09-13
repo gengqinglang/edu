@@ -467,6 +467,9 @@ class EducationPathApp {
         }).join('');
         
         container.innerHTML = pathsHTML;
+        
+        // 绑定路径卡片展开收起事件
+        this.bindPathToggleEvents();
     }
 
     /**
@@ -541,60 +544,85 @@ class EducationPathApp {
         const transitionCount = this.pathFilter.getPathTransitionCount(path);
         const prevalence = path.prevalence || 0;
         
+        // 判断是否默认展开（第一个路径默认展开）
+        const isExpanded = index === 0;
+        const expandedClass = isExpanded ? 'expanded' : 'collapsed';
+        
         return `
-            <div class="path-card">
-                <div class="path-header">
-                    <h4>路径 ${index + 1}</h4>
-                    <div class="path-description">${path.description || '教育路径'}</div>
-                </div>
-                <div class="path-steps">
-                    ${currentStageCost && currentStageCost.remainingYears > 0 ? `
-                        <!-- 当前阶段剩余费用卡片 -->
-                        <div class="path-step current-stage-step">
-                            <div class="step-header">
-                                <div class="step-title">
-                                    当前阶段剩余费用
-                                    <span class="step-description-inline">${currentStage}-${currentLevel}</span>
-                                </div>
-                                <div class="step-feasibility feasible">
-                                    可行
-                                </div>
-                            </div>
-                            <div class="step-transition">
-                                <span class="step-from">当前：${currentStage}-${currentLevel}</span>
-                                <span class="step-arrow">→</span>
-                                <span class="step-to">完成：${currentStage}-${currentLevel}</span>
-                            </div>
-                            <div class="step-cost">
-                                <div class="step-cost-header">
-                                    <span class="step-cost-label">剩余阶段费用：</span>
-                                    <span class="step-cost-amount">¥${this.costCalculator.formatCost(currentStageCost.total)}</span>
-                                </div>
-                                <div class="step-cost-details">
-                                    <div class="step-cost-breakdown">
-                                        <span class="step-cost-duration">剩余${currentStageCost.remainingYears}年</span>
-                                        <span class="step-cost-yearly">年均：¥${this.costCalculator.formatCost(currentStageCost.yearlyCost)}</span>
-                                    </div>
-                                    <div class="step-cost-source">数据来源：${currentStageCost.source}</div>
-                                </div>
-                            </div>
-                            ${this.generateEducationLevelFeatures(currentStage, currentLevel)}
+            <div class="path-card ${expandedClass}" data-path-index="${index}">
+                <div class="path-header clickable" data-toggle-path="${index}">
+                    <div class="path-title-section">
+                        <h4>路径 ${index + 1}</h4>
+                        <div class="path-description">${path.description || '教育路径'}</div>
+                    </div>
+                    <div class="path-summary">
+                        <div class="path-summary-item">
+                            <span class="summary-label">总费用：</span>
+                            <span class="summary-value">¥${this.costCalculator.formatCost(totalCost)}</span>
                         </div>
-                    ` : ''}
-                    ${steps}
+                        <div class="path-summary-item">
+                            <span class="summary-label">转轨：</span>
+                            <span class="summary-value">${transitionCount}次</span>
+                        </div>
+                        <div class="path-summary-item">
+                            <span class="summary-label">常见度：</span>
+                            <span class="summary-value">${prevalence}%</span>
+                        </div>
+                    </div>
+                    <div class="path-toggle-icon">
+                        <span class="toggle-arrow">▼</span>
+                    </div>
                 </div>
-                <div class="path-key-data">
-                    <div class="path-key-data-item">
-                        <span>总费用：</span>
-                        <span class="path-key-data-value">¥${this.costCalculator.formatCost(totalCost)}</span>
+                <div class="path-content">
+                    <div class="path-steps">
+                        ${currentStageCost && currentStageCost.remainingYears > 0 ? `
+                            <!-- 当前阶段剩余费用卡片 -->
+                            <div class="path-step current-stage-step">
+                                <div class="step-header">
+                                    <div class="step-title">
+                                        当前阶段剩余费用
+                                        <span class="step-description-inline">${currentStage}-${currentLevel}</span>
+                                    </div>
+                                    <div class="step-feasibility feasible">
+                                        可行
+                                    </div>
+                                </div>
+                                <div class="step-transition">
+                                    <span class="step-from">当前：${currentStage}-${currentLevel}</span>
+                                    <span class="step-arrow">→</span>
+                                    <span class="step-to">完成：${currentStage}-${currentLevel}</span>
+                                </div>
+                                <div class="step-cost">
+                                    <div class="step-cost-header">
+                                        <span class="step-cost-label">剩余阶段费用：</span>
+                                        <span class="step-cost-amount">¥${this.costCalculator.formatCost(currentStageCost.total)}</span>
+                                    </div>
+                                    <div class="step-cost-details">
+                                        <div class="step-cost-breakdown">
+                                            <span class="step-cost-duration">剩余${currentStageCost.remainingYears}年</span>
+                                            <span class="step-cost-yearly">年均：¥${this.costCalculator.formatCost(currentStageCost.yearlyCost)}</span>
+                                        </div>
+                                        <div class="step-cost-source">数据来源：${currentStageCost.source}</div>
+                                    </div>
+                                </div>
+                                ${this.generateEducationLevelFeatures(currentStage, currentLevel)}
+                            </div>
+                        ` : ''}
+                        ${steps}
                     </div>
-                    <div class="path-key-data-item">
-                        <span>转轨次数：</span>
-                        <span class="path-key-data-value">${transitionCount}次</span>
-                    </div>
-                    <div class="path-key-data-item">
-                        <span>常见度：</span>
-                        <span class="path-key-data-value">${prevalence}%</span>
+                    <div class="path-key-data">
+                        <div class="path-key-data-item">
+                            <span>总费用：</span>
+                            <span class="path-key-data-value">¥${this.costCalculator.formatCost(totalCost)}</span>
+                        </div>
+                        <div class="path-key-data-item">
+                            <span>转轨次数：</span>
+                            <span class="path-key-data-value">${transitionCount}次</span>
+                        </div>
+                        <div class="path-key-data-item">
+                            <span>常见度：</span>
+                            <span class="path-key-data-value">${prevalence}%</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -873,6 +901,41 @@ class EducationPathApp {
                 this.showPathDetails(routeId);
             });
         });
+    }
+
+    /**
+     * 绑定路径卡片展开收起事件
+     */
+    bindPathToggleEvents() {
+        const pathHeaders = document.querySelectorAll('.path-header[data-toggle-path]');
+        pathHeaders.forEach(header => {
+            header.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pathIndex = header.dataset.togglePath;
+                this.togglePathCard(pathIndex);
+            });
+        });
+    }
+
+    /**
+     * 切换路径卡片的展开收起状态
+     * @param {string|number} pathIndex 路径索引
+     */
+    togglePathCard(pathIndex) {
+        const pathCard = document.querySelector(`.path-card[data-path-index="${pathIndex}"]`);
+        if (!pathCard) return;
+        
+        const isExpanded = pathCard.classList.contains('expanded');
+        
+        if (isExpanded) {
+            // 收起卡片
+            pathCard.classList.remove('expanded');
+            pathCard.classList.add('collapsed');
+        } else {
+            // 展开卡片
+            pathCard.classList.remove('collapsed');
+            pathCard.classList.add('expanded');
+        }
     }
 
     /**
