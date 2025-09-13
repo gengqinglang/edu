@@ -7,7 +7,7 @@ export const STRATEGIC_ROUTE_TEMPLATES: Record<string, StrategicRouteTemplate> =
     'domestic_direct': {
         id: 'domestic_direct',
         name: '国内教育体系贯通路径',
-        descriptionTemplate: '基于您孩子当前【当前水平】的学籍，此路径可无缝衔接国内教育体系，通过【中考】、【高考】进入国内院校，最终获得硕士学位。该路径经济压力较小，但需面对较强的升学竞争。',
+        descriptionTemplate: '基于您孩子当前【当前水平】的学籍，此路径可无缝衔接国内教育体系，通过中考、高考进入国内院校，最终获得硕士学位。该路径经济压力较小，但需面对较强的升学竞争。',
         suitableFor: [
             '希望教育总投入控制在较低水平。',
             '孩子适应国内应试教育体系。',
