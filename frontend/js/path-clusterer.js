@@ -262,9 +262,42 @@ class PathClustererService {
       });
     }
     
-    // 2. 海外直通路线（包含早期转轨和全程国际体系）
+    // 2. 早期国际转轨路径
+    const earlyOverseasPaths = pathsWithTags.filter(({ coreTags }) => 
+      coreTags.transTiming === 'TRANS_EARLY' && 
+      coreTags.degreeType === 'DEGREE_OVERSEAS'
+    );
+    
+    if (earlyOverseasPaths.length > 0) {
+      const degreeName = this.getDegreeName(userInput.targetStage);
+      routes.push({
+        id: 'early_overseas_transition',
+        name: `早期国际转轨路径`,
+        description: `小学或初中阶段转入国际体系，获得海外${degreeName}。转轨时机早，适应性强。`,
+        coreTags: earlyOverseasPaths[0].coreTags,
+        features: earlyOverseasPaths[0].features,
+        costRange: this.calculateCostRange(earlyOverseasPaths.map(p => p.path)),
+        advantages: [
+          '转轨时机早，适应性强',
+          '国际化视野开阔',
+          '语言能力培养充分',
+          '海外名校机会多'
+        ],
+        disadvantages: [
+          '费用投入较高',
+          '文化适应挑战',
+          '回国发展需重新适应'
+        ],
+        paths: earlyOverseasPaths.map(p => p.path),
+        prevalence: this.calculateRoutePrevalence(earlyOverseasPaths.map(p => p.path)),
+        pathCount: earlyOverseasPaths.length,
+        feasibilityScore: this.calculateFeasibilityScore(earlyOverseasPaths.map(p => p.path))
+      });
+    }
+    
+    // 3. 海外直通路线（仅包含全程国际体系）
     const overseasPaths = pathsWithTags.filter(({ coreTags }) => 
-      (coreTags.transTiming === 'TRANS_EARLY' || coreTags.transTiming === 'TRANS_NONE') && 
+      coreTags.transTiming === 'TRANS_NONE' && 
       coreTags.degreeType === 'DEGREE_OVERSEAS'
     );
     
@@ -273,7 +306,7 @@ class PathClustererService {
       routes.push({
         id: 'overseas_direct',
         name: `海外直通路线`,
-        description: `早期或全程国际体系，获得海外${degreeName}。准备充分，费用高。`,
+        description: `全程国际体系，获得海外${degreeName}。准备充分，费用高。`,
         coreTags: overseasPaths[0].coreTags,
         features: overseasPaths[0].features,
         costRange: this.calculateCostRange(overseasPaths.map(p => p.path)),
@@ -295,7 +328,7 @@ class PathClustererService {
       });
     }
     
-    // 3. 中期转轨路线
+    // 4. 中期转轨路线
     const midTransitionPaths = pathsWithTags.filter(({ coreTags }) => 
       coreTags.transTiming === 'TRANS_MID' && 
       coreTags.degreeType === 'DEGREE_OVERSEAS'
@@ -328,7 +361,7 @@ class PathClustererService {
       });
     }
     
-    // 4. 晚期转轨路线
+    // 5. 晚期转轨路线
     const lateTransitionPaths = pathsWithTags.filter(({ coreTags }) => 
       coreTags.transTiming === 'TRANS_LATE' && 
       coreTags.degreeType === 'DEGREE_OVERSEAS'
@@ -361,7 +394,7 @@ class PathClustererService {
       });
     }
     
-    // 5. 回国发展路线
+    // 6. 回国发展路线
     const returnPaths = pathsWithTags.filter(({ coreTags }) => 
       coreTags.transTiming === 'TRANS_LATE' && 
       coreTags.degreeType === 'DEGREE_DOMESTIC'
@@ -394,7 +427,7 @@ class PathClustererService {
       });
     }
     
-    // 6. 不可行路径（单独分类）
+    // 7. 不可行路径（单独分类）
     const infeasiblePaths = pathsWithTags.filter(({ coreTags }) => 
       coreTags.feasibility === 'FEASIBLE_LOW'
     );
@@ -423,7 +456,7 @@ class PathClustererService {
       });
     }
     
-    // 7. 其他个性化路线（兜底）
+    // 8. 其他个性化路线（兜底）
     const clusteredPaths = routes.flatMap(route => route.paths);
     const otherPaths = pathsWithTags.filter(({ path }) => 
       !clusteredPaths.includes(path)

@@ -72,6 +72,7 @@ class EducationPathApp {
 
     init() {
         this.bindEvents();
+        this.initializeDefaultValues();
         this.initializeOptions();
         this.updateFormState();
     }
@@ -118,7 +119,7 @@ class EducationPathApp {
             this.handleFormSubmit();
         });
 
-        // 返回战略路线按钮
+        // 返回教育方向按钮
         if (this.backToRoutesBtn) {
             this.backToRoutesBtn.addEventListener('click', () => {
                 this.showStrategicRoutes();
@@ -166,9 +167,9 @@ class EducationPathApp {
         // 更新按钮选中状态
         const container = button.parentElement;
         container.querySelectorAll('.option-btn').forEach(btn => {
-            btn.classList.remove('selected');
+            btn.classList.remove('active', 'selected');
         });
-        button.classList.add('selected');
+        button.classList.add('active');
     }
 
     /**
@@ -190,12 +191,17 @@ class EducationPathApp {
                 button.textContent = `${grade}年级`;
                 this.currentGradeOptions.appendChild(button);
             });
+            
+            // 设置默认选中第一个年级
+            const firstButton = this.currentGradeOptions.querySelector('.option-btn');
+            if (firstButton) {
+                firstButton.classList.add('active');
+                this.currentGradeInput.value = firstButton.dataset.value;
+            }
         } else {
             this.currentGradeOptions.innerHTML = '<p class="text-muted">请先选择教育阶段</p>';
+            this.currentGradeInput.value = '';
         }
-        
-        // 清空当前年级选择
-        this.currentGradeInput.value = '';
     }
 
     /**
@@ -216,12 +222,17 @@ class EducationPathApp {
                 button.textContent = level;
                 this.currentLevelOptions.appendChild(button);
             });
+            
+            // 设置默认选中第一个教育水平
+            const firstButton = this.currentLevelOptions.querySelector('.option-btn');
+            if (firstButton) {
+                firstButton.classList.add('active');
+                this.currentLevelInput.value = firstButton.dataset.value;
+            }
         } else {
             this.currentLevelOptions.innerHTML = '<p class="text-muted">请先选择教育阶段</p>';
+            this.currentLevelInput.value = '';
         }
-        
-        // 清空当前教育水平选择
-        this.currentLevelInput.value = '';
     }
 
     /**
@@ -242,12 +253,20 @@ class EducationPathApp {
                 button.textContent = stage;
                 this.targetStageOptions.appendChild(button);
             });
+            
+            // 设置默认选中目标阶段（优先选择"大学"）
+            let defaultButton = this.targetStageOptions.querySelector('[data-value="大学"]');
+            if (!defaultButton) {
+                defaultButton = this.targetStageOptions.querySelector('.option-btn');
+            }
+            if (defaultButton) {
+                defaultButton.classList.add('active');
+                this.targetStageInput.value = defaultButton.dataset.value;
+            }
         } else {
             this.targetStageOptions.innerHTML = '<p class="text-muted">请先选择当前教育阶段</p>';
+            this.targetStageInput.value = '';
         }
-        
-        // 清空目标阶段选择
-        this.targetStageInput.value = '';
     }
 
     /**
@@ -269,6 +288,51 @@ class EducationPathApp {
     /**
      * 更新表单状态
      */
+    initializeDefaultValues() {
+        // 确保默认值正确设置
+        this.currentStageInput.value = '幼儿园';
+        this.currentGradeInput.value = '1年级';
+        this.currentLevelInput.value = '公立';
+        this.targetStageInput.value = '大学';
+        
+        // 更新按钮状态
+        this.updateButtonStates();
+    }
+
+    updateButtonStates() {
+        // 更新当前教育阶段按钮状态
+        document.querySelectorAll('#currentStageOptions .option-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.value === '幼儿园') {
+                btn.classList.add('active');
+            }
+        });
+        
+        // 更新当前年级按钮状态
+        document.querySelectorAll('#currentGradeOptions .option-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.value === '1年级') {
+                btn.classList.add('active');
+            }
+        });
+        
+        // 更新当前教育水平按钮状态
+        document.querySelectorAll('#currentLevelOptions .option-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.value === '公立') {
+                btn.classList.add('active');
+            }
+        });
+        
+        // 更新目标教育阶段按钮状态
+        document.querySelectorAll('#targetStageOptions .option-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.value === '大学') {
+                btn.classList.add('active');
+            }
+        });
+    }
+
     updateFormState() {
         const isFormValid = this.isFormValid();
         this.submitButton.disabled = !isFormValid;
@@ -298,11 +362,11 @@ class EducationPathApp {
             // 查找路径
             const result = findAllPaths(formData);
             
-            // 聚类为战略路线
+            // 聚类为教育方向
             this.strategicRoutes = this.pathClusterer.clusterPaths(result.paths, formData);
             this.rankedPaths = this.pathRanker.rankPaths(result.paths);
             
-            // 显示战略路线
+            // 显示教育方向
             this.displayStrategicRoutes();
             
         } catch (error) {
@@ -662,7 +726,7 @@ class EducationPathApp {
     }
 
     /**
-     * 显示战略路线
+     * 显示教育方向
      */
     displayStrategicRoutes() {
         this.resultsSection.style.display = 'block';
@@ -670,7 +734,7 @@ class EducationPathApp {
         this.pathDetailsContainer.style.display = 'none';
         
         // 调试信息
-        console.log('显示战略路线:', this.strategicRoutes.map(r => ({ id: r.id, name: r.name })));
+        console.log('显示教育方向:', this.strategicRoutes.map(r => ({ id: r.id, name: r.name })));
         
         // 分离路线：第一个分区包含所有可行路线（包括其他个性化路线），第二个分区只包含不可行路线
         const feasibleRoutes = this.strategicRoutes.filter(route => route.id !== 'infeasible_paths');
@@ -683,13 +747,13 @@ class EducationPathApp {
         console.log('不可行路线:', infeasibleRoutes.map(r => ({ id: r.id, name: r.name })));
         
         // 生成可行路线HTML
-        const feasibleRoutesHTML = feasibleRoutes.map(route => {
-            return this.generateStrategicRouteCard(route, false);
+        const feasibleRoutesHTML = feasibleRoutes.map((route, index) => {
+            return this.generateStrategicRouteCard(route, false, index + 1);
         }).join('');
         
         // 生成不可行路线HTML
-        const infeasibleRoutesHTML = infeasibleRoutes.map(route => {
-            return this.generateStrategicRouteCard(route, true);
+        const infeasibleRoutesHTML = infeasibleRoutes.map((route, index) => {
+            return this.generateStrategicRouteCard(route, true, feasibleRoutes.length + index + 1);
         }).join('');
         
         // 组合HTML内容
@@ -698,7 +762,7 @@ class EducationPathApp {
         if (feasibleRoutes.length > 0) {
             finalHTML += `
                 <div class="feasible-routes-section">
-                    <h3 class="section-subtitle">推荐战略路线</h3>
+
                     ${feasibleRoutesHTML}
                 </div>
             `;
@@ -718,22 +782,26 @@ class EducationPathApp {
         
         // 绑定点击事件
         this.bindStrategicRouteEvents();
+        
+        // 绑定帮助图标事件
+        this.bindHelpIconEvents();
     }
 
     /**
-     * 生成战略路线卡片HTML
-     * @param {Object} route 战略路线对象
-     * @param {boolean} isInfeasible 是否为不可行路线
+     * 生成教育方向卡片HTML
+     * @param {Object} route 教育方向对象
+     * @param {boolean} isInfeasible 是否为不可行方向
+     * @param {number} directionNumber 方向序号
      * @returns {string} 卡片HTML
      */
-    generateStrategicRouteCard(route, isInfeasible = false) {
+    generateStrategicRouteCard(route, isInfeasible = false, directionNumber = 1) {
         // 获取用户信息
         const userInfo = this.getUserInfo();
         
         // 获取模板
         const template = STRATEGIC_ROUTE_TEMPLATES[route.id];
         if (!template) {
-            console.warn(`未找到战略路线模板: ${route.id}`);
+            console.warn(`未找到教育方向模板: ${route.id}`);
             return '';
         }
         
@@ -759,7 +827,7 @@ class EducationPathApp {
         return `
             <div class="${cardClass}" data-route-id="${route.id}">
                 <div class="route-header">
-                    <h3 class="route-title">${template.name}</h3>
+                    <h3 class="route-title">方向${directionNumber}：${template.name}</h3>
                 </div>
                 
                 <p class="route-description">${personalizedDescription}</p>
@@ -770,14 +838,14 @@ class EducationPathApp {
                 </div>
                 
                 <div class="route-suitable-for">
-                    <div class="suitable-for-title">👍 非常适合这样的家庭：</div>
+                    <div class="suitable-for-title">非常适合这样的家庭：</div>
                     <ul class="suitable-for-list">
                         ${template.suitableFor.map(item => `<li>${item}</li>`).join('')}
                     </ul>
                 </div>
                 
                 <div class="route-need-to-know">
-                    <div class="need-to-know-title">📌 您需要提前了解：</div>
+                    <div class="need-to-know-title">您需要提前了解：</div>
                     <ul class="need-to-know-list">
                         ${template.needToKnow.map(item => `<li>${item}</li>`).join('')}
                     </ul>
@@ -793,7 +861,7 @@ class EducationPathApp {
     }
 
     /**
-     * 绑定战略路线点击事件
+     * 绑定教育方向点击事件
      */
     bindStrategicRouteEvents() {
         const actionButtons = this.strategicRoutesContainer.querySelectorAll('.route-action-btn');
@@ -820,7 +888,7 @@ class EducationPathApp {
         this.pathDetailsContainer.style.display = 'block';
         this.pathDetailsTitle.textContent = `${route.name} - 具体路径`;
         
-        // 直接使用战略路线中的路径，不进行匹配
+        // 直接使用教育方向中的路径，不进行匹配
         const routePaths = route.paths;
         
         // 基于当前教育状态对路径进行重新排序
@@ -842,12 +910,135 @@ class EducationPathApp {
     }
 
     /**
-     * 显示战略路线（返回按钮）
+     * 显示教育方向（返回按钮）
      */
     showStrategicRoutes() {
         this.strategicRoutesContainer.style.display = 'block';
         this.pathDetailsContainer.style.display = 'none';
         this.currentStrategicRoute = null;
+    }
+
+    /**
+     * 绑定帮助问题事件
+     */
+    bindHelpIconEvents() {
+        const helpQuestions = document.querySelectorAll('.help-question');
+        helpQuestions.forEach(question => {
+            question.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const tooltip = question.getAttribute('data-tooltip');
+                this.showHelpModal(tooltip);
+            });
+        });
+    }
+
+    /**
+     * 显示帮助弹窗
+     * @param {string} type 帮助类型
+     */
+    showHelpModal(type) {
+        let title, content;
+        
+        if (type === '教育方向说明') {
+            title = '什么是教育方向？';
+            content = `
+                <p>教育方向是指从您当前教育状态到目标教育阶段的整体规划思路。</p>
+                
+                <h4>举例说明：</h4>
+                <ul>
+                    <li><strong>国内直达路线</strong>：从幼儿园→小学→初中→高中→大学，全程在国内教育体系内完成</li>
+                    <li><strong>海外直通路线</strong>：从国内教育转向国际教育，最终申请海外大学</li>
+                    <li><strong>中期转轨路线</strong>：在初中或高中阶段从国内教育转向国际教育</li>
+                    <li><strong>回国发展路线</strong>：先在国内完成基础教育，再出国深造，最后回国发展</li>
+                </ul>
+                
+                <p>每个教育方向都包含多条具体的教育路径，您可以根据家庭情况和孩子特点选择最适合的方向。</p>
+            `;
+        } else if (type === '教育路径说明') {
+            title = '什么是教育路径？';
+            content = `
+                <p>教育路径是指在某个教育方向下，从当前状态到目标阶段的具体教育安排。</p>
+                
+                <h4>举例说明：</h4>
+                <p>假设您选择"海外直通路线"，可能的具体路径包括：</p>
+                <ul>
+                    <li><strong>路径1</strong>：幼儿园(公立) → 小学(民办双语) → 初中(民办双语) → 高中(民办国际化学校) → 大学(海外大学)</li>
+                    <li><strong>路径2</strong>：幼儿园(公立) → 小学(公立) → 初中(民办双语) → 高中(公立国际部) → 大学(海外大学)</li>
+                    <li><strong>路径3</strong>：幼儿园(公立) → 小学(公立) → 初中(公立) → 高中(海外高中) → 大学(海外大学)</li>
+                </ul>
+                
+                <p>每条路径都会详细显示：</p>
+                <ul>
+                    <li>每个教育阶段的具体安排</li>
+                    <li>预估的总费用</li>
+                    <li>转轨次数和时机</li>
+                    <li>该路径的常见程度</li>
+                </ul>
+            `;
+        }
+        
+        this.createModal(title, content);
+    }
+
+    /**
+     * 创建弹窗
+     * @param {string} title 标题
+     * @param {string} content 内容
+     */
+    createModal(title, content) {
+        // 移除已存在的弹窗
+        const existingModal = document.querySelector('.modal-overlay');
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
+        const modalHTML = `
+            <div class="modal-overlay" id="helpModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">${title}</h3>
+                        <button class="modal-close" id="modalClose">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        ${content}
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        const modal = document.getElementById('helpModal');
+        const closeBtn = document.getElementById('modalClose');
+        
+        // 显示弹窗
+        setTimeout(() => {
+            modal.classList.add('show');
+        }, 10);
+        
+        // 关闭弹窗事件
+        const closeModal = () => {
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.remove();
+            }, 300);
+        };
+        
+        closeBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        // ESC键关闭
+        const handleEsc = (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                document.removeEventListener('keydown', handleEsc);
+            }
+        };
+        document.addEventListener('keydown', handleEsc);
     }
 
     /**
@@ -917,45 +1108,26 @@ class EducationPathApp {
         
         return `
             <div class="results-header">
-                <h1 class="report-title">📋 教育路径可行性验证报告</h1>
-                <p class="report-subtitle">以下战略路线基于您提供的个人信息与当前最新教育政策计算得出，均已通过初步合规性验证。</p>
+                <h1 class="report-title">您的教育规划方案</h1>
+                <p class="report-subtitle">基于您的现状和目标，我们为您推荐以下教育方向，每个方向都经过可行性验证。</p>
                 
-                <div class="calculation-basis-panel">
-                    <h3 class="basis-title">本次计算基准</h3>
-                    <div class="basis-grid">
-                        <div class="basis-item">
-                            <span class="basis-label">国籍：</span>
-                            <span class="basis-value">${userInfo.nationality} ${userInfo.nationality === '中国籍' ? '✅' : '🌍'}</span>
-                        </div>
-                        <div class="basis-item">
-                            <span class="basis-label">当前状态：</span>
-                            <span class="basis-value">${userInfo.currentStatus}</span>
-                        </div>
-                        <div class="basis-item">
-                            <span class="basis-label">目标阶段：</span>
-                            <span class="basis-value">${userInfo.targetStage}</span>
-                        </div>
-                        <div class="basis-item">
-                            <span class="basis-label">数据版本：</span>
-                            <span class="basis-value">2025年招生与政策依据</span>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="key-metrics">
                     <div class="metric">
-                        <span class="metric-label">已验证的战略方向</span>
+                        <span class="metric-label">可行的教育方向</span>
                         <strong class="metric-value">${totalRoutes}</strong>
                         <span class="metric-unit">个</span>
+                        <div class="help-question" data-tooltip="教育方向说明">什么是教育方向？</div>
                     </div>
                     <div class="metric">
-                        <span class="metric-label">覆盖的具体路径</span>
+                        <span class="metric-label">覆盖的教育路径</span>
                         <strong class="metric-value">${totalPaths}</strong>
                         <span class="metric-unit">条</span>
+                        <div class="help-question" data-tooltip="教育路径说明">什么是教育路径？</div>
                     </div>
                 </div>
 
-                <p class="guidance-text">请查阅下方为您验证可行的战略路线。您可以探索每个方向下的具体路径及其详细合规性依据。</p>
+
             </div>
         `;
     }

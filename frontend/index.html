@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>教育路径规划系统</title>
+    <title>教育路径规划及费用精算系统</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -11,8 +11,8 @@
     <div class="container">
         <!-- 头部 -->
         <header class="header">
-            <h1 class="title">教育路径规划系统</h1>
-            <p class="subtitle">智能分析您的教育发展路径</p>
+            <h1 class="title">教育路径规划及费用精算系统</h1>
+            <p class="subtitle">智能规划教育发展路径，精准计算教育投资成本</p>
         </header>
 
         <!-- 主要内容区域 -->
@@ -27,7 +27,7 @@
                         <div class="form-group">
                             <label class="form-label">当前教育阶段</label>
                             <div class="option-grid" id="currentStageOptions">
-                                <button type="button" class="option-btn" data-value="幼儿园">幼儿园</button>
+                                <button type="button" class="option-btn active" data-value="幼儿园">幼儿园</button>
                                 <button type="button" class="option-btn" data-value="小学">小学</button>
                                 <button type="button" class="option-btn" data-value="初中">初中</button>
                                 <button type="button" class="option-btn" data-value="高中">高中</button>
@@ -35,39 +35,48 @@
                                 <button type="button" class="option-btn" data-value="研究生">研究生</button>
                                 <button type="button" class="option-btn" data-value="博士">博士</button>
                             </div>
-                            <input type="hidden" id="currentStage" name="currentStage" required>
+                            <input type="hidden" id="currentStage" name="currentStage" value="幼儿园" required>
                         </div>
 
                         <!-- 当前年级 -->
                         <div class="form-group">
                             <label class="form-label">当前年级</label>
                             <div class="option-grid" id="currentGradeOptions">
-                                <!-- 年级选项将根据教育阶段动态生成 -->
+                                <button type="button" class="option-btn active" data-value="1年级">1年级</button>
+                                <button type="button" class="option-btn" data-value="2年级">2年级</button>
+                                <button type="button" class="option-btn" data-value="3年级">3年级</button>
                             </div>
-                            <input type="hidden" id="currentGrade" name="currentGrade" required>
+                            <input type="hidden" id="currentGrade" name="currentGrade" value="1年级" required>
                         </div>
 
                         <!-- 当前教育水平 -->
                         <div class="form-group">
                             <label class="form-label">当前教育水平</label>
                             <div class="option-grid" id="currentLevelOptions">
-                                <!-- 教育水平选项将根据教育阶段动态生成 -->
+                                <button type="button" class="option-btn active" data-value="公立">公立</button>
+                                <button type="button" class="option-btn" data-value="普通私立">普通私立</button>
+                                <button type="button" class="option-btn" data-value="民办双语">民办双语</button>
                             </div>
-                            <input type="hidden" id="currentLevel" name="currentLevel" required>
+                            <input type="hidden" id="currentLevel" name="currentLevel" value="公立" required>
                         </div>
 
                         <!-- 目标阶段 -->
                         <div class="form-group">
                             <label class="form-label">目标教育阶段</label>
                             <div class="option-grid" id="targetStageOptions">
-                                <!-- 目标阶段选项将根据当前教育阶段动态生成 -->
+                                <button type="button" class="option-btn" data-value="小学">小学</button>
+                                <button type="button" class="option-btn" data-value="初中">初中</button>
+                                <button type="button" class="option-btn" data-value="高中">高中</button>
+                                <button type="button" class="option-btn active" data-value="大学">大学</button>
+                                <button type="button" class="option-btn" data-value="研究生">研究生</button>
+                                <button type="button" class="option-btn" data-value="博士">博士</button>
                             </div>
-                            <input type="hidden" id="targetStage" name="targetStage" required>
+                            <input type="hidden" id="targetStage" name="targetStage" value="大学" required>
                         </div>
 
                         <!-- 提交按钮 -->
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-primary" disabled>
+                            <button type="submit" class="btn btn-primary">
                                 <span class="btn-text">开始规划</span>
                                 <span class="btn-loading" style="display: none;">分析中...</span>
                             </button>
@@ -79,18 +88,18 @@
             <!-- 结果展示区域 -->
             <section class="results-section" id="resultsSection" style="display: none;">
                 <div class="results-container">
-                    <h2 class="section-title">教育战略分析</h2>
+
                     
-                    <!-- 战略路线选择 -->
+                    <!-- 教育方向选择 -->
                     <div class="strategic-routes-container" id="strategicRoutesContainer">
-                        <!-- 战略路线卡片将通过JavaScript动态生成 -->
+                        <!-- 教育方向卡片将通过JavaScript动态生成 -->
                     </div>
 
                     <!-- 路径详情区域 -->
                     <div class="path-details-container" id="pathDetailsContainer" style="display: none;">
                         <div class="path-details-header">
                             <button class="btn btn-secondary" id="backToRoutesBtn">
-                                <span>← 返回战略路线</span>
+                                <span>← 返回教育方向</span>
                             </button>
                             <h3 class="path-details-title" id="pathDetailsTitle">路径详情</h3>
                         </div>

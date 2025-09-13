@@ -51,8 +51,8 @@ export const STRATEGIC_ROUTE_TEMPLATES: Record<string, StrategicRouteTemplate> =
         ]
     },
     
-    'early_transition': {
-        id: 'early_transition',
+    'early_overseas_transition': {
+        id: 'early_overseas_transition',
         name: '早期国际转轨路径',
         descriptionTemplate: '基于您孩子当前【当前水平】的年龄优势，此路径建议在【当前阶段】阶段就转入国际教育体系，让孩子尽早适应国际化学习环境，为未来的海外升学做好准备。',
         suitableFor: [

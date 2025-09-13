@@ -38,18 +38,35 @@ export const STRATEGIC_ROUTE_CONFIGS: StrategicRouteConfig[] = [
   },
   
   {
+    id: 'early_overseas_transition',
+    name: '早期国际转轨路径',
+    description: '小学或初中阶段转入国际体系，获得海外学位。转轨时机早，适应性强。',
+    tagCombination: {
+      transTiming: ['TRANS_EARLY'],
+      degreeType: ['DEGREE_OVERSEAS']
+    },
+    advantages: ['转轨时机早，适应性强', '国际化视野开阔', '语言能力培养充分', '海外名校机会多'],
+    disadvantages: ['费用投入较高', '文化适应挑战', '回国发展需重新适应'],
+    examples: [
+      '小学公立→初中民办双语→高中民办国际化→海外本科→海外硕士',
+      '小学公立→初中外籍→高中外籍→海外本科'
+    ],
+    priority: 3
+  },
+  
+  {
     id: 'overseas_direct',
     name: '海外直通路线',
-    description: '早期或全程国际体系，获得海外学位。准备充分，费用高。',
+    description: '全程国际体系，获得海外学位。准备充分，费用高。',
     tagCombination: {
-      transTiming: ['TRANS_EARLY', 'TRANS_NONE'],
+      transTiming: ['TRANS_NONE'],
       degreeType: ['DEGREE_OVERSEAS']
     },
     advantages: ['国际化程度高', '申请海外名校优势明显', '语言能力突出'],
     disadvantages: ['费用最高', '可能缺乏国内基础教育', '文化认同问题'],
     examples: [
-      '小学公立→初中民办双语→高中民办国际化→海外本科→海外硕士',
-      '小学外籍→初中外籍→高中外籍→海外本科'
+      '小学外籍→初中外籍→高中外籍→海外本科',
+      '小学民办双语→初中民办双语→高中民办国际化→海外本科'
     ],
     priority: 4
   },
@@ -102,7 +119,7 @@ export const STRATEGIC_ROUTE_CONFIGS: StrategicRouteConfig[] = [
       '小学公立→初中公立→高中公立→海外本科→国内硕士',
       '小学公立→初中公立→高中公立→海外本科→国内博士'
     ],
-    priority: 5
+    priority: 7
   },
   
   {
@@ -134,7 +151,7 @@ export const STRATEGIC_ROUTE_CONFIGS: StrategicRouteConfig[] = [
       '早期转轨但获得国内学位的路径',
       '多次转轨的复杂路径'
     ],
-    priority: 7
+    priority: 8
   }
 ];
 
