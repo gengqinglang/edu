@@ -442,7 +442,7 @@ class EducationPathApp {
             </div>
             <div class="stat-card clickable ${this.currentFilter === 'infeasible' ? 'active' : ''}" data-filter="infeasible">
                 <div class="stat-number">${result.infeasiblePaths}</div>
-                <div class="stat-label">不可行路径</div>
+                <div class="stat-label">不可行路线</div>
             </div>
         `;
         
@@ -771,8 +771,8 @@ class EducationPathApp {
         if (infeasibleRoutes.length > 0) {
             finalHTML += `
                 <div class="infeasible-routes-section">
-                    <h3 class="section-subtitle infeasible-subtitle">不可行路径参考</h3>
-                    <p class="infeasible-notice">以下路径在当前条件下不可行，仅供参考了解限制条件</p>
+                    <h3 class="section-subtitle infeasible-subtitle">不可行路线参考</h3>
+                    <p class="infeasible-notice">以下路线在当前条件下不可行，仅供参考了解限制条件</p>
                     ${infeasibleRoutesHTML}
                 </div>
             `;
@@ -947,10 +947,10 @@ class EducationPathApp {
                 
                 <h4>举例说明：</h4>
                 <ul>
-                    <li><strong>国内直达路线</strong>：从幼儿园→小学→初中→高中→大学，全程在国内教育体系内完成</li>
-                    <li><strong>海外直通路线</strong>：从国内教育转向国际教育，最终申请海外大学</li>
-                    <li><strong>中期转轨路线</strong>：在初中或高中阶段从国内教育转向国际教育</li>
-                    <li><strong>回国发展路线</strong>：先在国内完成基础教育，再出国深造，最后回国发展</li>
+                    <li><strong>国内教育体系贯通路径</strong>：从幼儿园→小学→初中→高中→大学，全程在国内教育体系内完成</li>
+                    <li><strong>海外教育体系直通路径</strong>：从国内教育转向国际教育，最终申请海外大学</li>
+                    <li><strong>中期国际转轨路径</strong>：在初中或高中阶段从国内教育转向国际教育</li>
+                    <li><strong>回国发展路径</strong>：先在国内完成基础教育，再出国深造，最后回国发展</li>
                 </ul>
                 
                 <p>每个教育方向都包含多条具体的教育路径，您可以根据家庭情况和孩子特点选择最适合的方向。</p>
@@ -1086,7 +1086,7 @@ class EducationPathApp {
             'domestic_pg': '国内研究生',
             'overseas_pg': '海外研究生',
             'early_transition': '早期转轨',
-            'late_transition': '中期转轨',
+            'late_transition': '中期国际转轨路径',
             'cost_high': '高费用',
             'cost_low': '低费用'
         };

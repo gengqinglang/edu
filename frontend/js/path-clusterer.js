@@ -229,7 +229,7 @@ class PathClustererService {
       features: this.analyzePathFeatures(path)
     }));
     
-    // 1. 国内直达路线
+    // 1. 国内教育体系贯通路径
     const domesticPaths = pathsWithTags.filter(({ coreTags }) => 
       coreTags.transTiming === 'TRANS_NONE' && 
       coreTags.degreeType === 'DEGREE_DOMESTIC'
@@ -239,7 +239,7 @@ class PathClustererService {
       const degreeName = this.getDegreeName(userInput.targetStage);
       routes.push({
         id: 'domestic_direct',
-        name: `国内直达路线`,
+        name: `国内教育体系贯通路径`,
         description: `全程国内体系，获得国内${degreeName}。经济压力小，竞争激烈。`,
         coreTags: domesticPaths[0].coreTags,
         features: domesticPaths[0].features,
@@ -295,7 +295,7 @@ class PathClustererService {
       });
     }
     
-    // 3. 海外直通路线（仅包含全程国际体系）
+    // 3. 海外教育体系直通路径（仅包含全程国际体系）
     const overseasPaths = pathsWithTags.filter(({ coreTags }) => 
       coreTags.transTiming === 'TRANS_NONE' && 
       coreTags.degreeType === 'DEGREE_OVERSEAS'
@@ -305,7 +305,7 @@ class PathClustererService {
       const degreeName = this.getDegreeName(userInput.targetStage);
       routes.push({
         id: 'overseas_direct',
-        name: `海外直通路线`,
+        name: `海外教育体系直通路径`,
         description: `全程国际体系，获得海外${degreeName}。准备充分，费用高。`,
         coreTags: overseasPaths[0].coreTags,
         features: overseasPaths[0].features,
@@ -328,7 +328,7 @@ class PathClustererService {
       });
     }
     
-    // 4. 中期转轨路线
+    // 4. 中期国际转轨路径
     const midTransitionPaths = pathsWithTags.filter(({ coreTags }) => 
       coreTags.transTiming === 'TRANS_MID' && 
       coreTags.degreeType === 'DEGREE_OVERSEAS'
@@ -338,7 +338,7 @@ class PathClustererService {
       const degreeName = this.getDegreeName(userInput.targetStage);
       routes.push({
         id: 'mid_transition',
-        name: `中期转轨路线`,
+        name: `中期国际转轨路径`,
         description: `高中阶段转入国际体系，获得海外${degreeName}。平衡基础教育和留学准备，费用中高。`,
         coreTags: midTransitionPaths[0].coreTags,
         features: midTransitionPaths[0].features,
@@ -361,7 +361,7 @@ class PathClustererService {
       });
     }
     
-    // 5. 晚期转轨路线
+    // 5. 后期国际转轨路径
     const lateTransitionPaths = pathsWithTags.filter(({ coreTags }) => 
       coreTags.transTiming === 'TRANS_LATE' && 
       coreTags.degreeType === 'DEGREE_OVERSEAS'
@@ -371,7 +371,7 @@ class PathClustererService {
       const degreeName = this.getDegreeName(userInput.targetStage);
       routes.push({
         id: 'late_transition',
-        name: `晚期转轨路线`,
+        name: `后期国际转轨路径`,
         description: `本科或研究生阶段转入海外体系，获得海外${degreeName}。性价比高，但需适应海外教育。`,
         coreTags: lateTransitionPaths[0].coreTags,
         features: lateTransitionPaths[0].features,
@@ -394,7 +394,7 @@ class PathClustererService {
       });
     }
     
-    // 6. 回国发展路线
+    // 6. 回国发展路径
     const returnPaths = pathsWithTags.filter(({ coreTags }) => 
       coreTags.transTiming === 'TRANS_LATE' && 
       coreTags.degreeType === 'DEGREE_DOMESTIC'
@@ -404,7 +404,7 @@ class PathClustererService {
       const degreeName = this.getDegreeName(userInput.targetStage);
       routes.push({
         id: 'return_development',
-        name: `回国发展路线`,
+        name: `回国发展路径`,
         description: `海外经历后回国获得${degreeName}。常见于海外本科后回国读研或读博。`,
         coreTags: returnPaths[0].coreTags,
         features: returnPaths[0].features,
@@ -427,7 +427,7 @@ class PathClustererService {
       });
     }
     
-    // 7. 不可行路径（单独分类）
+    // 7. 不可行路线（单独分类）
     const infeasiblePaths = pathsWithTags.filter(({ coreTags }) => 
       coreTags.feasibility === 'FEASIBLE_LOW'
     );
@@ -435,7 +435,7 @@ class PathClustererService {
     if (infeasiblePaths.length > 0) {
       routes.push({
         id: 'infeasible_paths',
-        name: '不可行路径',
+        name: '不可行路线',
         description: '当前条件下不可行的教育路径，需要调整条件或等待时机。',
         coreTags: infeasiblePaths[0].coreTags,
         features: infeasiblePaths[0].features,
