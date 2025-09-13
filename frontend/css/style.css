@@ -331,12 +331,12 @@ body {
 }
 
 .route-description {
-    color: #01BCD6;
+    color: #0A8A9B;
     font-size: var(--font-size-sm);
     line-height: 1.5;
     margin-bottom: 1.5rem;
     padding: 0;
-    background: rgba(255, 255, 255, 0.6);
+    background: transparent;
     border-radius: var(--radius-md);
 }
 
@@ -361,6 +361,7 @@ body {
     border-radius: var(--radius-md);
     margin-bottom: 1.5rem;
     border: 1px solid #B8E8EB;
+    position: relative;
 }
 
 .cost-range-label {
@@ -368,6 +369,16 @@ body {
     color: var(--text-muted);
     margin-bottom: 0.5rem;
     font-weight: 600;
+}
+
+.cost-range-source {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    line-height: 1.2;
 }
 
 .cost-range-value {

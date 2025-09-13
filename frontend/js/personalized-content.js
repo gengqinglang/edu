@@ -103,4 +103,14 @@ class PersonalizedContentService {
         const dataSource = this.generateDataSourceDescription(routeId);
         return `￥${(minCost / 10000).toFixed(0)}万 - ￥${(maxCost / 10000).toFixed(0)}万 (${dataSource})`;
     }
+
+    /**
+     * 生成费用范围数值（不含说明）
+     * @param {number} minCost 最低费用
+     * @param {number} maxCost 最高费用
+     * @returns {string} 费用范围数值
+     */
+    generateCostRangeValue(minCost, maxCost) {
+        return `￥${(minCost / 10000).toFixed(0)}万 - ￥${(maxCost / 10000).toFixed(0)}万`;
+    }
 }

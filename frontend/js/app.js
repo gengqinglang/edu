@@ -812,11 +812,11 @@ class EducationPathApp {
         );
         
         // 生成个性化费用范围描述
-        const costRangeDescription = this.personalizedContent.generateCostRangeDescription(
+        const costRangeValue = this.personalizedContent.generateCostRangeValue(
             route.costRange.min,
-            route.costRange.max,
-            route.id
+            route.costRange.max
         );
+        const costRangeSource = this.personalizedContent.generateDataSourceDescription(route.id);
         
         // 生成行动按钮文案
         const actionButtonText = `探索 ${route.pathCount || route.paths.length} 条具体路径 →`;
@@ -834,7 +834,8 @@ class EducationPathApp {
                 
                 <div class="route-cost-range">
                     <div class="cost-range-label">预估总费用</div>
-                    <div class="cost-range-value">${costRangeDescription}</div>
+                    <div class="cost-range-source">${costRangeSource}</div>
+                    <div class="cost-range-value">${costRangeValue}</div>
                 </div>
                 
                 <div class="route-suitable-for">
