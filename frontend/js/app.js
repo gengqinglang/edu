@@ -830,7 +830,7 @@ class EducationPathApp {
                     <h3 class="route-title">方向${directionNumber}：${template.name}</h3>
                 </div>
                 
-                <p class="route-description">${personalizedDescription}</p>
+                <p class="route-description">"${personalizedDescription}"</p>
                 
                 <div class="route-cost-range">
                     <div class="cost-range-label">预估总费用</div>
