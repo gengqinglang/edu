@@ -331,11 +331,11 @@ body {
 }
 
 .route-description {
-    color: #4A6B7A;
+    color: #01BCD6;
     font-size: var(--font-size-sm);
     line-height: 1.5;
     margin-bottom: 1.5rem;
-    padding: 1rem;
+    padding: 0;
     background: rgba(255, 255, 255, 0.6);
     border-radius: var(--radius-md);
 }
