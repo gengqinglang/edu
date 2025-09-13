@@ -1080,6 +1080,12 @@ class EducationPathApp {
         // 绑定筛选器事件
         this.bindFilterEvents();
         
+        // 设置默认排序按钮状态
+        const defaultSortBtn = document.querySelector('.sort-btn[data-sort="prevalence"]');
+        if (defaultSortBtn) {
+            defaultSortBtn.classList.add('active');
+        }
+        
         // 重置筛选状态
         this.pathFilter.resetFilters();
     }
@@ -1088,49 +1094,44 @@ class EducationPathApp {
      * 初始化教育阶段筛选器
      */
     initializeEducationStageFilters(currentStage, targetStage) {
-        const container = document.getElementById('educationStageFilters');
-        if (!container) return;
+        const stageSelect = document.getElementById('stageSelect');
+        const levelSelect = document.getElementById('levelSelect');
         
-        // 清空容器
-        container.innerHTML = '';
-        
+        if (!stageSelect || !levelSelect) return;
+
         // 获取可筛选的阶段
         const filterableStages = this.pathFilter.getFilterableStages(currentStage, targetStage);
         
+        // 清空并重新填充阶段选择器
+        stageSelect.innerHTML = '<option value="">选择教育阶段</option>';
         filterableStages.forEach(stage => {
-            const stageLevels = this.pathFilter.getStageLevels(stage);
-            if (stageLevels.length === 0) return;
+            const option = document.createElement('option');
+            option.value = stage;
+            option.textContent = stage;
+            stageSelect.appendChild(option);
+        });
+
+        // 阶段选择变化时更新水平选择器
+        stageSelect.addEventListener('change', (e) => {
+            const selectedStage = e.target.value;
             
-            const stageFilterDiv = document.createElement('div');
-            stageFilterDiv.className = 'stage-filter';
-            
-            const label = document.createElement('label');
-            label.className = 'stage-filter-label';
-            label.textContent = `${stage}水平：`;
-            
-            const select = document.createElement('select');
-            select.className = 'stage-level-select';
-            select.multiple = true;
-            select.dataset.stage = stage;
-            
-            // 添加默认选项
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = `全部${stage}水平`;
-            defaultOption.selected = true;
-            select.appendChild(defaultOption);
-            
-            // 添加具体水平选项
-            stageLevels.forEach(level => {
-                const option = document.createElement('option');
-                option.value = level;
-                option.textContent = level;
-                select.appendChild(option);
-            });
-            
-            stageFilterDiv.appendChild(label);
-            stageFilterDiv.appendChild(select);
-            container.appendChild(stageFilterDiv);
+            if (selectedStage) {
+                // 获取该阶段的所有教育水平
+                const levels = this.pathFilter.getStageLevels(selectedStage);
+                
+                levelSelect.innerHTML = '<option value="">选择教育水平</option>';
+                levels.forEach(level => {
+                    const option = document.createElement('option');
+                    option.value = level;
+                    option.textContent = level;
+                    levelSelect.appendChild(option);
+                });
+                
+                levelSelect.disabled = false;
+            } else {
+                levelSelect.innerHTML = '<option value="">选择教育水平</option>';
+                levelSelect.disabled = true;
+            }
         });
     }
 
@@ -1205,6 +1206,19 @@ class EducationPathApp {
                 this.resetFilters();
             });
         }
+        
+        // 绑定排序按钮事件
+        const sortBtns = document.querySelectorAll('.sort-btn');
+        sortBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 移除所有按钮的active状态
+                sortBtns.forEach(b => b.classList.remove('active'));
+                // 添加当前按钮的active状态
+                btn.classList.add('active');
+                // 应用筛选
+                this.debouncedApplyFilters();
+            });
+        });
     }
 
     /**
@@ -1268,17 +1282,14 @@ class EducationPathApp {
         };
         
         // 收集教育阶段筛选
-        const stageSelects = document.querySelectorAll('.stage-level-select');
-        stageSelects.forEach(select => {
-            const stage = select.dataset.stage;
-            const selectedLevels = Array.from(select.selectedOptions)
-                .map(option => option.value)
-                .filter(value => value !== '');
-            
-            if (selectedLevels.length > 0) {
-                filterState.educationStages[stage] = selectedLevels;
-            }
-        });
+        const stageSelect = document.getElementById('stageSelect');
+        const levelSelect = document.getElementById('levelSelect');
+        
+        if (stageSelect && levelSelect && stageSelect.value && levelSelect.value) {
+            const stage = stageSelect.value;
+            const level = levelSelect.value;
+            filterState.educationStages[stage] = [level];
+        }
         
         // 收集费用区间筛选
         const minInput = document.getElementById('costRangeMin');
@@ -1295,9 +1306,11 @@ class EducationPathApp {
         });
         
         // 收集排序方式
-        const sortSelect = document.getElementById('sortSelect');
-        if (sortSelect) {
-            filterState.sortBy = sortSelect.value;
+        const activeSortBtn = document.querySelector('.sort-btn.active');
+        if (activeSortBtn) {
+            filterState.sortBy = activeSortBtn.dataset.sort;
+        } else {
+            filterState.sortBy = 'prevalence'; // 默认排序
         }
         
         return filterState;
@@ -1308,18 +1321,16 @@ class EducationPathApp {
      */
     resetFilters() {
         // 重置教育阶段筛选器
-        const stageSelects = document.querySelectorAll('.stage-level-select');
-        stageSelects.forEach(select => {
-            const defaultOption = select.querySelector('option[value=""]');
-            if (defaultOption) {
-                defaultOption.selected = true;
-                Array.from(select.options).forEach(option => {
-                    if (option !== defaultOption) {
-                        option.selected = false;
-                    }
-                });
-            }
-        });
+        const stageSelect = document.getElementById('stageSelect');
+        const levelSelect = document.getElementById('levelSelect');
+        
+        if (stageSelect) {
+            stageSelect.value = '';
+        }
+        if (levelSelect) {
+            levelSelect.value = '';
+            levelSelect.disabled = true;
+        }
         
         // 重置费用区间筛选器
         const minInput = document.getElementById('costRangeMin');
@@ -1336,10 +1347,15 @@ class EducationPathApp {
             tag.checked = false;
         });
         
-        // 重置排序选择器
-        const sortSelect = document.getElementById('sortSelect');
-        if (sortSelect) {
-            sortSelect.value = 'prevalence';
+        // 重置排序按钮
+        const sortBtns = document.querySelectorAll('.sort-btn');
+        sortBtns.forEach(btn => {
+            btn.classList.remove('active');
+        });
+        // 设置默认排序为常见度
+        const defaultSortBtn = document.querySelector('.sort-btn[data-sort="prevalence"]');
+        if (defaultSortBtn) {
+            defaultSortBtn.classList.add('active');
         }
         
         // 应用重置后的筛选器

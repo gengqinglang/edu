@@ -1845,14 +1845,119 @@ body {
 
 .filters-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 1.5rem;
+    align-items: start;
 }
 
 .filter-group {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    min-width: 0; /* 防止内容溢出 */
+}
+
+/* 教育阶段下拉选择样式 */
+.stage-dropdown-container {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.stage-select, .level-select {
+    flex: 1;
+    min-width: 140px;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: white;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.stage-select:focus, .level-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.stage-select:disabled, .level-select:disabled {
+    background: #f8f9fa;
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.level-select:not(:disabled) {
+    opacity: 1;
+}
+
+/* 排序按钮样式 */
+.sort-buttons {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.sort-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: white;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 140px;
+    justify-content: center;
+}
+
+.sort-btn:hover {
+    border-color: var(--primary-color);
+    background: var(--primary-light);
+}
+
+.sort-btn.active {
+    border-color: var(--primary-color);
+    background: var(--primary-color);
+    color: white;
+}
+
+.sort-btn .sort-icon {
+    font-size: 1rem;
+}
+
+.sort-btn .sort-text {
+    font-weight: 500;
+}
+
+/* 费用区间独立区域样式 */
+.cost-range-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.cost-range-section .filter-label {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.cost-range-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
 }
 
 .filter-label {
@@ -2101,8 +2206,29 @@ body {
         gap: 0.75rem;
     }
     
+    .stage-dropdown-container {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .stage-select, .level-select {
+        min-width: 100%;
+    }
+    
     .feature-tags {
         flex-direction: column;
+    }
+    
+    .sort-buttons {
+        flex-direction: column;
+    }
+    
+    .sort-btn {
+        min-width: 100%;
+    }
+    
+    .cost-range-filter {
+        padding: 1rem;
     }
     
     .path-key-data {

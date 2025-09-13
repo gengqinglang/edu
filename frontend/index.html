@@ -108,20 +108,19 @@
                                     <!-- 教育阶段筛选 -->
                                     <div class="filter-group">
                                         <label class="filter-label">锁定关键阶段：</label>
-                                        <div class="education-stage-filters" id="educationStageFilters">
-                                            <!-- 动态生成教育阶段筛选器 -->
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- 费用区间筛选 -->
-                                    <div class="filter-group">
-                                        <label class="filter-label">总费用区间：</label>
-                                        <div class="cost-range-filter">
-                                            <input type="range" id="costRangeMin" class="cost-range-input" min="0" max="1000000" step="10000">
-                                            <input type="range" id="costRangeMax" class="cost-range-input" min="0" max="1000000" step="10000">
-                                            <div class="cost-range-display">
-                                                <span id="costRangeMinDisplay">0</span> - <span id="costRangeMaxDisplay">0</span> 元
-                                            </div>
+                                        <div class="stage-dropdown-container">
+                                            <select id="stageSelect" class="stage-select">
+                                                <option value="">选择教育阶段</option>
+                                                <option value="小学">小学</option>
+                                                <option value="初中">初中</option>
+                                                <option value="高中">高中</option>
+                                                <option value="大学">大学</option>
+                                                <option value="研究生">研究生</option>
+                                                <option value="博士">博士</option>
+                                            </select>
+                                            <select id="levelSelect" class="level-select" disabled>
+                                                <option value="">选择教育水平</option>
+                                            </select>
                                         </div>
                                     </div>
                                     
@@ -151,11 +150,32 @@
                                     <!-- 排序选择 -->
                                     <div class="filter-group">
                                         <label class="filter-label">排序方式：</label>
-                                        <select id="sortSelect" class="sort-select">
-                                            <option value="prevalence">按常见度排序（从高到低）</option>
-                                            <option value="cost">按总费用排序（从低到高）</option>
-                                            <option value="transitions">按转轨次数排序（从少到多）</option>
-                                        </select>
+                                        <div class="sort-buttons">
+                                            <button type="button" class="sort-btn" data-sort="prevalence">
+                                                <span class="sort-icon">📊</span>
+                                                <span class="sort-text">按常见度排序</span>
+                                            </button>
+                                            <button type="button" class="sort-btn" data-sort="cost">
+                                                <span class="sort-icon">💰</span>
+                                                <span class="sort-text">按总费用排序</span>
+                                            </button>
+                                            <button type="button" class="sort-btn" data-sort="transitions">
+                                                <span class="sort-icon">🔄</span>
+                                                <span class="sort-text">按转轨次数排序</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 费用区间筛选 - 独立一行 -->
+                                <div class="cost-range-section">
+                                    <label class="filter-label">总费用区间：</label>
+                                    <div class="cost-range-filter">
+                                        <input type="range" id="costRangeMin" class="cost-range-input" min="0" max="1000000" step="10000">
+                                        <input type="range" id="costRangeMax" class="cost-range-input" min="0" max="1000000" step="10000">
+                                        <div class="cost-range-display">
+                                            <span id="costRangeMinDisplay">0</span> - <span id="costRangeMaxDisplay">0</span> 元
+                                        </div>
                                     </div>
                                 </div>
                             </div>
