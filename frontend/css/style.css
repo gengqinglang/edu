@@ -273,8 +273,8 @@ body {
 }
 
 .strategic-route-card {
-    background: rgba(202, 244, 247, 0.3);
-    border: 2px solid #B8E8EB;
+    background: rgba(202, 244, 247, 0.2);
+    border: 2px solid #D1D5DB;
     border-radius: var(--radius-lg);
     padding: 1.5rem;
     transition: all 0.3s ease;
@@ -1328,8 +1328,7 @@ body {
 
 .infeasible-routes-section {
     margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 2px solid var(--gray-200);
+    border: 2px solid #D1D5DB;
     background: var(--gray-50);
     border-radius: var(--radius-lg);
     padding: 2rem;
@@ -1365,19 +1364,11 @@ body {
 /* 不可行路线卡片样式 */
 .strategic-route-card.infeasible-route {
     background: #FEFEFE;
-    border: 2px solid #FECACA;
-    opacity: 0.8;
+    border: 2px solid #D1D5DB;
     position: relative;
 }
 
-.strategic-route-card.infeasible-route::before {
-    content: "⚠️";
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    font-size: 1.5rem;
-    z-index: 1;
-}
+
 
 .strategic-route-card.infeasible-route:hover {
     border-color: #F87171;
@@ -1432,11 +1423,7 @@ body {
         font-size: var(--font-size-xs);
     }
     
-    .strategic-route-card.infeasible-route::before {
-        top: 0.75rem;
-        right: 0.75rem;
-        font-size: 1.25rem;
-    }
+
 }
 
 /* 教育水平特点样式 */

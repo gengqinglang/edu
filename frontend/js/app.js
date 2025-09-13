@@ -827,7 +827,7 @@ class EducationPathApp {
         return `
             <div class="${cardClass}" data-route-id="${route.id}">
                 <div class="route-header">
-                    <h3 class="route-title">方向${directionNumber}：${template.name}</h3>
+                    ${!isInfeasible ? `<h3 class="route-title">方向${directionNumber}：${template.name}</h3>` : ''}
                 </div>
                 
                 <p class="route-description">"${personalizedDescription}"</p>
