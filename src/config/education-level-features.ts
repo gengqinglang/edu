@@ -119,13 +119,6 @@ export const EDUCATION_LEVEL_FEATURES: EducationLevelFeature[] = [
   },
   {
     stage: '高中',
-    level: '职业高中',
-    features: '**技能导向**：以学习职业技能和参加"职教高考"为主，文化课为辅。',
-    nationalityRequirement: '无限制',
-    studentStatus: '有'
-  },
-  {
-    stage: '高中',
     level: '公立国际部',
     features: '**优质双轨制**：依附于顶尖公立高中，通过中考+自主招生录取。**最大特点是既保留学籍可参加高考，又提供国际课程申请海外大学**。竞争激烈。',
     nationalityRequirement: '通常需本地户籍',

@@ -291,18 +291,6 @@ export const EDUCATION_GRADE_COST_DATABASE: GradeCost[] = [
     },
     {
       stage: '高中' as EducationStage,
-      level: '职业高中' as EducationLevel,
-      grade: grade,
-      cost: { 
-        tuition: 3000, 
-        materials: 4000, 
-        other: 4000, 
-        source: '职业高中标准费用' 
-      },
-      source: '职业高中标准费用'
-    },
-    {
-      stage: '高中' as EducationStage,
       level: '公立国际部' as EducationLevel,
       grade: grade,
       cost: { 

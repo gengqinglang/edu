@@ -55,28 +55,24 @@ export const EDUCATION_TRANSITION_RULES: TransitionRule[] = [
   // ================== 初中 -> 高中 ==================
   { from: { stage: '初中', level: '公立' }, to: { stage: '高中', level: '公立' }, feasibility: 'feasible', conditions: ['必须参加中考并达到录取分数线'], description: '最主流的路径，竞争激烈', prevalence: 0.9 },
   { from: { stage: '初中', level: '公立' }, to: { stage: '高中', level: '民办普通高中' }, feasibility: 'feasible', conditions: ['参加中考，分数达到私立校要求'], description: '中考分数达到要求即可', prevalence: 0.5 },
-  { from: { stage: '初中', level: '公立' }, to: { stage: '高中', level: '职业高中' }, feasibility: 'feasible', conditions: ['参加中考，或通过自主招生'], description: '通过中考或职业高中自主招生', prevalence: 0.3 },
   { from: { stage: '初中', level: '公立' }, to: { stage: '高中', level: '公立国际部' }, feasibility: 'feasible', conditions: ['必须参加中考并达到极高分数线', '通过国际部的加试（英语、面试）'], description: '要求最高，需要学术和英语能力俱佳', prevalence: 0.9 },
   { from: { stage: '初中', level: '公立' }, to: { stage: '高中', level: '民办国际化学校' }, feasibility: 'feasible', conditions: ['通过学校的自主招生考试（数学、英语、面试）'], description: '主流转轨路径，通过学校考试即可', prevalence: 0.4 },
   { from: { stage: '初中', level: '公立' }, to: { stage: '高中', level: '外籍人员子女学校' }, feasibility: 'infeasible', conditions: ['孩子需持有外籍护照或港澳台身份'], description: '身份不符', prevalence: 0.1 },
 
   { from: { stage: '初中', level: '普通私立' }, to: { stage: '高中', level: '公立' }, feasibility: 'feasible', conditions: ['必须参加中考并达到录取分数线'], description: '可行，但需额外备考国内中考课程', prevalence: 0.6 },
   { from: { stage: '初中', level: '普通私立' }, to: { stage: '高中', level: '民办普通高中' }, feasibility: 'feasible', conditions: [], description: '常见选择', prevalence: 0.5 },
-  { from: { stage: '初中', level: '普通私立' }, to: { stage: '高中', level: '职业高中' }, feasibility: 'feasible', conditions: [], description: '可选路径', prevalence: 0.3 },
   { from: { stage: '初中', level: '普通私立' }, to: { stage: '高中', level: '公立国际部' }, feasibility: 'feasible', conditions: ['必须参加中考并达到分数线', '通过国际部的加试'], description: '理想路径之一，优势在于英语能力', prevalence: 0.6 },
   { from: { stage: '初中', level: '普通私立' }, to: { stage: '高中', level: '民办国际化学校' }, feasibility: 'feasible', conditions: ['通过学校的自主招生考试'], description: '常见转轨路径', prevalence: 0.4 },
   { from: { stage: '初中', level: '普通私立' }, to: { stage: '高中', level: '外籍人员子女学校' }, feasibility: 'infeasible', conditions: ['孩子需持有外籍护照或港澳台身份'], description: '身份不符', prevalence: 0.1 },
 
   { from: { stage: '初中', level: '民办双语' }, to: { stage: '高中', level: '公立' }, feasibility: 'feasible', conditions: ['必须参加中考并达到录取分数线'], description: '可行，但需额外备考国内中考课程', prevalence: 0.5 },
   { from: { stage: '初中', level: '民办双语' }, to: { stage: '高中', level: '民办普通高中' }, feasibility: 'feasible', conditions: ['参加中考，分数达到要求'], description: '中考分数达到要求即可', prevalence: 0.5 },
-  { from: { stage: '初中', level: '民办双语' }, to: { stage: '高中', level: '职业高中' }, feasibility: 'feasible', conditions: [], description: '可选路径', prevalence: 0.3 },
   { from: { stage: '初中', level: '民办双语' }, to: { stage: '高中', level: '公立国际部' }, feasibility: 'feasible', conditions: ['必须参加中考并达到分数线', '通过国际部的加试'], description: '理想路径之一，优势在于英语能力', prevalence: 0.4 },
   { from: { stage: '初中', level: '民办双语' }, to: { stage: '高中', level: '民办国际化学校' }, feasibility: 'feasible', conditions: ['通过学校的自主招生考试'], description: '最自然、最常见的衔接路径', prevalence: 0.4 },
   { from: { stage: '初中', level: '民办双语' }, to: { stage: '高中', level: '外籍人员子女学校' }, feasibility: 'infeasible', conditions: ['孩子需持有外籍护照或港澳台身份'], description: '身份不符', prevalence: 0.1 },
 
   { from: { stage: '初中', level: '外籍人员子女学校' }, to: { stage: '高中', level: '公立' }, feasibility: 'infeasible', conditions: ['无法参加中考'], description: '政策不允许', prevalence: 0.1 },
   { from: { stage: '初中', level: '外籍人员子女学校' }, to: { stage: '高中', level: '民办普通高中' }, feasibility: 'feasible', conditions: ['通过私立高中选拔考试'], description: '需通过考试，且孩子需适应中文教学环境', prevalence: 0.3 },
-  { from: { stage: '初中', level: '外籍人员子女学校' }, to: { stage: '高中', level: '职业高中' }, feasibility: 'feasible', conditions: ['通过自主招生'], description: '需通过考试，且孩子需适应中文教学环境', prevalence: 0.3 },
   { from: { stage: '初中', level: '外籍人员子女学校' }, to: { stage: '高中', level: '公立国际部' }, feasibility: 'infeasible', conditions: ['通常需本地户籍和中考成绩'], description: '政策不符', prevalence: 0.1 },
   { from: { stage: '初中', level: '外籍人员子女学校' }, to: { stage: '高中', level: '民办国际化学校' }, feasibility: 'feasible', conditions: ['通过学校自主招生考试'], description: '常见选择', prevalence: 0.3 },
   { from: { stage: '初中', level: '外籍人员子女学校' }, to: { stage: '高中', level: '外籍人员子女学校' }, feasibility: 'feasible', conditions: [], description: '自然衔接', prevalence: 0.3 },
@@ -92,10 +88,6 @@ export const EDUCATION_TRANSITION_RULES: TransitionRule[] = [
   { from: { stage: '高中', level: '民办普通高中' }, to: { stage: '大学', level: '海外大学' }, feasibility: 'feasible', conditions: ['不参加高考，需额外准备托福/雅思、SAT/ACT、申请材料'], description: '可行但极其辛苦，需在高考体系外付出巨大努力', prevalence: 0.3 },
   { from: { stage: '高中', level: '民办普通高中' }, to: { stage: '大学', level: '中外合作办学' }, feasibility: 'feasible', conditions: ['必须参加高考并达到录取分数线', '或通过综合评价选拔'], description: '通过高考或综合评价录取', prevalence: 0.5 },
 
-  { from: { stage: '高中', level: '职业高中' }, to: { stage: '大学', level: '国内公办' }, feasibility: 'feasible', conditions: ['参加职教高考或技能拔尖人才免试入学'], description: '通过职业教育的升学通道', prevalence: 0.3 },
-  { from: { stage: '高中', level: '职业高中' }, to: { stage: '大学', level: '国内民办' }, feasibility: 'feasible', conditions: ['参加职教高考'], description: '通过职业教育的升学通道', prevalence: 0.3 },
-  { from: { stage: '高中', level: '职业高中' }, to: { stage: '大学', level: '海外大学' }, feasibility: 'feasible', conditions: ['需额外准备语言成绩和申请材料'], description: '需要针对性地准备申请', prevalence: 0.3 },
-  { from: { stage: '高中', level: '职业高中' }, to: { stage: '大学', level: '中外合作办学' }, feasibility: 'feasible', conditions: ['参加职教高考或通过自主招生'], description: '通过职业教育通道或自主招生', prevalence: 0.5 },
 
   { from: { stage: '高中', level: '公立国际部' }, to: { stage: '大学', level: '国内公办' }, feasibility: 'infeasible', conditions: ['通常无国内学籍，无法参加高考'], description: '路径锁定，极难回头', prevalence: 0.1 },
   { from: { stage: '高中', level: '公立国际部' }, to: { stage: '大学', level: '国内民办' }, feasibility: 'infeasible', conditions: ['通常无国内学籍，无法参加高考'], description: '路径锁定，极难回头', prevalence: 0.1 },

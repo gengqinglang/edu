@@ -605,18 +605,6 @@ const EDUCATION_GRADE_COST_DATABASE = [
   },
   {
     "stage": "高中",
-    "level": "职业高中",
-    "grade": 1,
-    "cost": {
-      "tuition": 3000,
-      "materials": 4000,
-      "other": 4000,
-      "source": "职业高中标准费用"
-    },
-    "source": "职业高中标准费用"
-  },
-  {
-    "stage": "高中",
     "level": "公立国际部",
     "grade": 1,
     "cost": {
@@ -692,18 +680,6 @@ const EDUCATION_GRADE_COST_DATABASE = [
   },
   {
     "stage": "高中",
-    "level": "职业高中",
-    "grade": 2,
-    "cost": {
-      "tuition": 3000,
-      "materials": 4000,
-      "other": 4000,
-      "source": "职业高中标准费用"
-    },
-    "source": "职业高中标准费用"
-  },
-  {
-    "stage": "高中",
     "level": "公立国际部",
     "grade": 2,
     "cost": {
@@ -776,18 +752,6 @@ const EDUCATION_GRADE_COST_DATABASE = [
       "source": "市场均价估算"
     },
     "source": "市场均价估算"
-  },
-  {
-    "stage": "高中",
-    "level": "职业高中",
-    "grade": 3,
-    "cost": {
-      "tuition": 3000,
-      "materials": 4000,
-      "other": 4000,
-      "source": "职业高中标准费用"
-    },
-    "source": "职业高中标准费用"
   },
   {
     "stage": "高中",

@@ -166,17 +166,6 @@ const EDUCATION_COST_DATABASE = [
   },
   {
     stage: '高中',
-    level: '职业高中',
-    duration: 3,
-    cost: { 
-      tuition: 3000, 
-      materials: 4000, 
-      other: 4000, 
-      source: '职业高中标准费用' 
-    },
-  },
-  {
-    stage: '高中',
     level: '公立国际部',
     duration: 3,
     cost: { 
