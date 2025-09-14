@@ -741,12 +741,35 @@ class EducationPathApp {
      * 显示教育方向
      */
     displayStrategicRoutes() {
+        // 隐藏基本信息录入区域
+        const inputSection = document.querySelector('.input-section');
+        if (inputSection) {
+            inputSection.style.display = 'none';
+        }
+        
+        // 显示结果区域
         this.resultsSection.style.display = 'block';
         this.strategicRoutesContainer.style.display = 'block';
         this.pathDetailsContainer.style.display = 'none';
         
+        // 滚动到结果区域顶部
+        this.resultsSection.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+        });
+        
         // 调试信息
         console.log('显示教育方向:', this.strategicRoutes.map(r => ({ id: r.id, name: r.name })));
+        
+        // 等待DOM更新后绑定重新规划按钮事件
+        setTimeout(() => {
+            const backToFormBtn = document.getElementById('backToFormBtn');
+            if (backToFormBtn) {
+                backToFormBtn.addEventListener('click', () => {
+                    this.showFormSection();
+                });
+            }
+        }, 100);
         
         // 分离路线：第一个分区包含所有可行路线（包括其他个性化路线），第二个分区只包含不可行路线
         const feasibleRoutes = this.strategicRoutes.filter(route => route.id !== 'infeasible_paths');
@@ -967,6 +990,29 @@ class EducationPathApp {
     }
 
     /**
+     * 显示表单区域（重新规划）
+     */
+    showFormSection() {
+        // 显示基本信息录入区域
+        const inputSection = document.querySelector('.input-section');
+        if (inputSection) {
+            inputSection.style.display = 'block';
+        }
+        
+        // 隐藏结果区域
+        this.resultsSection.style.display = 'none';
+        
+        // 滚动到页面顶部
+        window.scrollTo({ 
+            top: 0, 
+            behavior: 'smooth' 
+        });
+        
+        // 重置加载状态
+        this.setLoadingState(false);
+    }
+
+    /**
      * 绑定帮助问题事件
      */
     bindHelpIconEvents() {
@@ -1156,6 +1202,11 @@ class EducationPathApp {
         
         return `
             <div class="results-header">
+                <div class="results-header-top">
+                    <button class="btn btn-secondary" id="backToFormBtn" style="margin-bottom: 1rem;">
+                        <span>← 重新规划</span>
+                    </button>
+                </div>
                 <h1 class="report-title">您的教育规划方案</h1>
                 <p class="report-subtitle">基于您的现状和目标，我们为您推荐以下教育方向，每个方向都经过可行性验证。</p>
                 
