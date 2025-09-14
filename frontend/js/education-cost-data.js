@@ -273,4 +273,7 @@ const EDUCATION_COST_DATABASE = [
 // 导出数据
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { EDUCATION_COST_DATABASE };
+} else {
+  // 浏览器环境下，将数据暴露到全局作用域
+  window.EDUCATION_COST_DATABASE = EDUCATION_COST_DATABASE;
 }

@@ -638,4 +638,6 @@ class PathClustererService {
 // 导出服务类
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = PathClustererService;
+} else {
+  window.PathClustererService = PathClustererService;
 }

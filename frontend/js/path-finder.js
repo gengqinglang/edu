@@ -1,6 +1,10 @@
 // 教育路径查找引擎 - JavaScript版本
 class EducationPathFinder {
     constructor(rules = EDUCATION_TRANSITION_RULES) {
+        if (typeof EDUCATION_TRANSITION_RULES === 'undefined') {
+            throw new Error('教育转换规则数据未加载，请刷新页面重试');
+        }
+        
         this.rules = rules;
         this.visited = new Set();
         this.allPaths = [];
@@ -136,6 +140,10 @@ class EducationPathFinder {
      * @returns {Array} 可能的转换规则
      */
     findPossibleTransitions(currentNode) {
+        if (!this.rules || !Array.isArray(this.rules)) {
+            throw new Error('教育转换规则数据异常，无法查找路径');
+        }
+        
         return this.rules.filter(rule => 
             rule.from.stage === currentNode.stage && 
             rule.from.level === currentNode.level

@@ -358,9 +358,18 @@ class EducationPathApp {
             
             // 收集表单数据
             const formData = this.collectFormData();
+            console.log('=== 表单提交调试 ===');
+            console.log('表单数据:', formData);
+            
+            // 再次检查数据是否存在
+            if (typeof EDUCATION_TRANSITION_RULES === 'undefined') {
+                throw new Error('教育转换规则数据未加载，请刷新页面重试');
+            }
             
             // 查找路径
+            console.log('开始查找路径...');
             const result = findAllPaths(formData);
+            console.log('路径查找结果:', result);
             
             // 聚类为教育方向
             this.strategicRoutes = this.pathClusterer.clusterPaths(result.paths, formData);

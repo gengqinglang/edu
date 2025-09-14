@@ -95,4 +95,7 @@ const EDUCATION_TRANSITION_RULES = [
 // 导出数据
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { EDUCATION_TRANSITION_RULES };
+} else {
+  // 浏览器环境下，将数据暴露到全局作用域
+  window.EDUCATION_TRANSITION_RULES = EDUCATION_TRANSITION_RULES;
 }

@@ -54,4 +54,11 @@ if (typeof module !== 'undefined' && module.exports) {
     FEASIBILITY_TAGS,
     PATH_FEATURES
   };
+} else {
+  // 浏览器环境下，将数据暴露到全局作用域
+  window.TRANS_TIMING_TAGS = TRANS_TIMING_TAGS;
+  window.TARGET_DEGREE_TAGS = TARGET_DEGREE_TAGS;
+  window.DEGREE_TYPE_TAGS = DEGREE_TYPE_TAGS;
+  window.FEASIBILITY_TAGS = FEASIBILITY_TAGS;
+  window.PATH_FEATURES = PATH_FEATURES;
 }
