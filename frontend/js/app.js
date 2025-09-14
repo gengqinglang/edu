@@ -358,18 +358,9 @@ class EducationPathApp {
             
             // 收集表单数据
             const formData = this.collectFormData();
-            console.log('=== 表单提交调试 ===');
-            console.log('表单数据:', formData);
-            
-            // 再次检查数据是否存在
-            if (typeof EDUCATION_TRANSITION_RULES === 'undefined') {
-                throw new Error('教育转换规则数据未加载，请刷新页面重试');
-            }
             
             // 查找路径
-            console.log('开始查找路径...');
             const result = findAllPaths(formData);
-            console.log('路径查找结果:', result);
             
             // 聚类为教育方向
             this.strategicRoutes = this.pathClusterer.clusterPaths(result.paths, formData);
@@ -569,14 +560,6 @@ class EducationPathApp {
                             <span class="summary-label">总费用：</span>
                             <span class="summary-value">¥${this.costCalculator.formatCost(totalCost)}</span>
                         </div>
-                        <div class="path-summary-item">
-                            <span class="summary-label">转轨：</span>
-                            <span class="summary-value">${transitionCount}次</span>
-                        </div>
-                        <div class="path-summary-item">
-                            <span class="summary-label">常见度：</span>
-                            <span class="summary-value">${prevalence}%</span>
-                        </div>
                     </div>
                     <div class="path-toggle-icon">
                         <span class="toggle-arrow">▼</span>
@@ -623,14 +606,6 @@ class EducationPathApp {
                         <div class="path-key-data-item">
                             <span>总费用：</span>
                             <span class="path-key-data-value">¥${this.costCalculator.formatCost(totalCost)}</span>
-                        </div>
-                        <div class="path-key-data-item">
-                            <span>转轨次数：</span>
-                            <span class="path-key-data-value">${transitionCount}次</span>
-                        </div>
-                        <div class="path-key-data-item">
-                            <span>常见度：</span>
-                            <span class="path-key-data-value">${prevalence}%</span>
                         </div>
                     </div>
                 </div>
@@ -1044,8 +1019,8 @@ class EducationPathApp {
                 <ul>
                     <li>每个教育阶段的具体安排</li>
                     <li>预估的总费用</li>
-                    <li>转轨次数和时机</li>
-                    <li>该路径的常见程度</li>
+                    <li>各阶段的教育特点和要求</li>
+                    <li>转换的可行性和条件</li>
                 </ul>
             `;
         }
