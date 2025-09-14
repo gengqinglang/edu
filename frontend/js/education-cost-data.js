@@ -37,17 +37,6 @@ const EDUCATION_COST_DATABASE = [
       source: '市场均价估算（北京上海）' 
     },
   },
-  {
-    stage: '幼儿园',
-    level: '外籍人员子女学校',
-    duration: 3,
-    cost: { 
-      tuition: 200000, 
-      meals: 12000, 
-      other: 20000, 
-      source: '外籍人员子女学校标准费用' 
-    },
-  },
 
   // ========== 小学 ==========
   {
@@ -83,17 +72,6 @@ const EDUCATION_COST_DATABASE = [
       source: '市场均价估算（北京上海）' 
     },
   },
-  {
-    stage: '小学',
-    level: '外籍人员子女学校',
-    duration: 6,
-    cost: { 
-      tuition: 250000, 
-      materials: 10000, 
-      other: 15000, 
-      source: '外籍人员子女学校标准费用' 
-    },
-  },
 
   // ========== 初中 ==========
   {
@@ -127,17 +105,6 @@ const EDUCATION_COST_DATABASE = [
       materials: 10000, 
       other: 15000, 
       source: '市场均价估算（北京上海）' 
-    },
-  },
-  {
-    stage: '初中',
-    level: '外籍人员子女学校',
-    duration: 3,
-    cost: { 
-      tuition: 280000, 
-      materials: 12000, 
-      other: 18000, 
-      source: '外籍人员子女学校标准费用' 
     },
   },
 
@@ -185,18 +152,6 @@ const EDUCATION_COST_DATABASE = [
       materials: 15000, 
       other: 25000, 
       source: '市场均价估算' 
-    },
-  },
-  {
-    stage: '高中',
-    level: '外籍人员子女学校',
-    duration: 3,
-    cost: { 
-      tuition: 350000, 
-      boarding: 60000, 
-      materials: 18000, 
-      other: 30000, 
-      source: '外籍人员子女学校标准费用' 
     },
   },
   {
@@ -315,9 +270,7 @@ const EDUCATION_COST_DATABASE = [
   },
 ];
 
-// 导出费用数据库
+// 导出数据
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { EDUCATION_COST_DATABASE };
-} else {
-  window.EDUCATION_COST_DATABASE = EDUCATION_COST_DATABASE;
 }

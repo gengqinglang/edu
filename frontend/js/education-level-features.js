@@ -27,13 +27,6 @@ const EDUCATION_LEVEL_FEATURES = [
     nationalityRequirement: '无限制',
     studentStatus: '有'
   },
-  {
-    stage: '幼儿园',
-    level: '外籍人员子女学校',
-    features: '**纯国际环境**：完全采用国际课程（如IB PYP），全英文教学。目标直指海外大学。**一旦选择，基本无法转回国内体系**。',
-    nationalityRequirement: '仅外籍/港澳台',
-    studentStatus: '有'
-  },
 
   // 小学阶段
   {
@@ -57,13 +50,6 @@ const EDUCATION_LEVEL_FEATURES = [
     nationalityRequirement: '无限制',
     studentStatus: '通常有'
   },
-  {
-    stage: '小学',
-    level: '外籍人员子女学校',
-    features: '**纯国际环境**：完全采用国际课程（如IB PYP/MYP），全英文教学。目标直指海外大学。**一旦选择，基本无法转回国内体系**。',
-    nationalityRequirement: '仅外籍/港澳台',
-    studentStatus: '无'
-  },
 
   // 初中阶段
   {
@@ -86,13 +72,6 @@ const EDUCATION_LEVEL_FEATURES = [
     features: '**双轨制核心**：**融合课程**（国家课程+国际元素），**高强度双语教学**。**最大优势是保留国内学籍**，为家庭保留未来参加中考高考的可能性，同时为出国做准备。',
     nationalityRequirement: '无限制',
     studentStatus: '通常有'
-  },
-  {
-    stage: '初中',
-    level: '外籍人员子女学校',
-    features: '**纯国际环境**：完全采用国际课程（如IB PYP/MYP），全英文教学。目标直指海外大学。**一旦选择，基本无法转回国内体系**。',
-    nationalityRequirement: '仅外籍/港澳台',
-    studentStatus: '无'
   },
 
   // 高中阶段
@@ -123,13 +102,6 @@ const EDUCATION_LEVEL_FEATURES = [
     features: '**出国直通车**：自主招生，提供AP/A-Level/IB等课程。**不参与国内高考，目标就是海外本科**。是中国学生进入国际体系的主流选择。',
     nationalityRequirement: '无限制',
     studentStatus: '通常无'
-  },
-  {
-    stage: '高中',
-    level: '外籍人员子女学校',
-    features: '**纯海外环境**：与小学初中一脉相承，提供IBDP等课程，学生全部申请海外大学。',
-    nationalityRequirement: '仅外籍/港澳台',
-    studentStatus: '无'
   },
   {
     stage: '高中',

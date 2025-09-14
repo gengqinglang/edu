@@ -34,13 +34,6 @@ export const EDUCATION_LEVEL_FEATURES: EducationLevelFeature[] = [
     nationalityRequirement: '无限制',
     studentStatus: '有'
   },
-  {
-    stage: '幼儿园',
-    level: '外籍人员子女学校',
-    features: '**纯国际环境**：完全采用国际课程（如IB PYP），全英文教学。目标直指海外大学。**一旦选择，基本无法转回国内体系**。',
-    nationalityRequirement: '仅外籍/港澳台',
-    studentStatus: '有'
-  },
 
   // 小学阶段
   {
@@ -53,96 +46,75 @@ export const EDUCATION_LEVEL_FEATURES: EducationLevelFeature[] = [
   {
     stage: '小学',
     level: '普通私立',
-    features: '**强化应试**：同样以国内课程和中考为目标，可能管理更严格、教学进度更快。',
+    features: '**灵活选择**：入学相对容易，教学质量参差不齐。**目标国内中考**。',
     nationalityRequirement: '无限制',
     studentStatus: '有'
   },
   {
     stage: '小学',
     level: '民办双语',
-    features: '**双轨制核心**：**融合课程**（国家课程+国际元素），**高强度双语教学**。**最大优势是保留国内学籍**，为家庭保留未来参加中考高考的可能性，同时为出国做准备。',
+    features: '**双轨培养**：中英文并重，国际化教育理念。为初中阶段的选择（国内/国际）做准备。**费用较高**。',
     nationalityRequirement: '无限制',
-    studentStatus: '通常有'
-  },
-  {
-    stage: '小学',
-    level: '外籍人员子女学校',
-    features: '**纯国际环境**：完全采用国际课程（如IB PYP/MYP），全英文教学。目标直指海外大学。**一旦选择，基本无法转回国内体系**。',
-    nationalityRequirement: '仅外籍/港澳台',
-    studentStatus: '无'
+    studentStatus: '有'
   },
 
   // 初中阶段
   {
     stage: '初中',
     level: '公立',
-    features: '**义务教育核心**：免学费，严格按学区入学。课程完全对标**中考**。',
+    features: '**中考主战场**：严格按学区入学，课程完全对标中考。**竞争激烈**，但费用低。',
     nationalityRequirement: '无明确限制，但优先录取有户籍/房产者',
     studentStatus: '有'
   },
   {
     stage: '初中',
     level: '普通私立',
-    features: '**强化应试**：同样以国内课程和中考为目标，可能管理更严格、教学进度更快。',
+    features: '**中考备选**：入学相对容易，同样对标中考。教学质量参差不齐。',
     nationalityRequirement: '无限制',
     studentStatus: '有'
   },
   {
     stage: '初中',
     level: '民办双语',
-    features: '**双轨制核心**：**融合课程**（国家课程+国际元素），**高强度双语教学**。**最大优势是保留国内学籍**，为家庭保留未来参加中考高考的可能性，同时为出国做准备。',
+    features: '**关键分岔点**：既可以参加中考进入国内高中，也可以申请国际高中。**双轨培养，选择灵活**。',
     nationalityRequirement: '无限制',
-    studentStatus: '通常有'
-  },
-  {
-    stage: '初中',
-    level: '外籍人员子女学校',
-    features: '**纯国际环境**：完全采用国际课程（如IB PYP/MYP），全英文教学。目标直指海外大学。**一旦选择，基本无法转回国内体系**。',
-    nationalityRequirement: '仅外籍/港澳台',
-    studentStatus: '无'
+    studentStatus: '有'
   },
 
   // 高中阶段
   {
     stage: '高中',
     level: '公立',
-    features: '**高考主力军**：通过中考选拔，核心任务是为**高考**备考。',
-    nationalityRequirement: '通常需本地户籍',
+    features: '**高考主力军**：严格按中考分数录取，课程完全对标高考。**竞争最激烈，但费用最低**。',
+    nationalityRequirement: '无明确限制，但需要中考成绩',
     studentStatus: '有'
   },
   {
     stage: '高中',
     level: '民办普通高中',
-    features: '**高考另一选择**：同样以高考为目标，录取分数线可能更灵活。',
+    features: '**高考备选**：中考分数要求相对较低，同样对标高考。**费用较高，竞争相对缓和**。',
     nationalityRequirement: '无限制',
     studentStatus: '有'
   },
   {
     stage: '高中',
     level: '公立国际部',
-    features: '**优质双轨制**：依附于顶尖公立高中，通过中考+自主招生录取。**最大特点是既保留学籍可参加高考，又提供国际课程申请海外大学**。竞争激烈。',
-    nationalityRequirement: '通常需本地户籍',
-    studentStatus: '通常有'
+    features: '**精英路径**：需要极高的中考分数+英语能力。提供AP/A-Level/IB课程，**目标海外顶尖大学**。',
+    nationalityRequirement: '无明确限制，但需要中考成绩',
+    studentStatus: '有'
   },
   {
     stage: '高中',
     level: '民办国际化学校',
-    features: '**出国直通车**：自主招生，提供AP/A-Level/IB等课程。**不参与国内高考，目标就是海外本科**。是中国学生进入国际体系的主流选择。',
+    features: '**国际教育主流**：提供多种国际课程（AP/A-Level/IB），**目标海外大学**。入学相对灵活，但费用高。',
     nationalityRequirement: '无限制',
-    studentStatus: '通常无'
-  },
-  {
-    stage: '高中',
-    level: '外籍人员子女学校',
-    features: '**纯海外环境**：与小学初中一脉相承，提供IBDP等课程，学生全部申请海外大学。',
-    nationalityRequirement: '仅外籍/港澳台',
-    studentStatus: '无'
+    studentStatus: '有'
   },
   {
     stage: '高中',
     level: '海外高中',
-    features: '**提前留学**：直接送孩子出国读高中，提前适应海外生活和教育模式。',
-    nationalityRequirement: '无限制（但需签证）',
+    features: '**纯海外体验**：直接在海外就读高中，完全融入当地教育体系。**申请海外大学优势明显，但适应挑战大**。',
+    nationalityRequirement: '无限制，但需要签证',
     studentStatus: '无'
   },
 
@@ -150,45 +122,45 @@ export const EDUCATION_LEVEL_FEATURES: EducationLevelFeature[] = [
   {
     stage: '大学',
     level: '国内公办',
-    features: '通过**高考**录取，性价比高，是国内教育体系的主要出口。',
-    nationalityRequirement: '无限制（通过高考）',
+    features: '**性价比之王**：学费低，教学质量有保障。**需要高考高分，竞争激烈**。',
+    nationalityRequirement: '无明确限制，但需要高考成绩',
     studentStatus: '有'
   },
   {
     stage: '大学',
     level: '国内民办',
-    features: '通过**高考**录取，学费高于公办。',
-    nationalityRequirement: '无限制（通过高考）',
+    features: '**灵活选择**：录取分数相对较低，专业设置灵活。**学费较高，就业竞争力相对较弱**。',
+    nationalityRequirement: '无限制',
     studentStatus: '有'
   },
   {
     stage: '大学',
-    level: '中外合作办学',
-    features: '如上海纽约大学、西交利物浦大学。国际化教学，学费高于公办，但低于直接出国。毕业后获中外两个学位。',
-    nationalityRequirement: '无限制（通过高考/综评）',
-    studentStatus: '有（中外双学籍）'
+    level: '海外大学',
+    features: '**国际视野**：接受国际化教育，提升语言能力和跨文化交流能力。**费用高，但就业前景广阔**。',
+    nationalityRequirement: '无限制，但需要签证',
+    studentStatus: '无'
   },
   {
     stage: '大学',
-    level: '海外大学',
-    features: '通过申请制（看GPA、语言、文书等）入读国外大学。费用高昂。',
-    nationalityRequirement: '无限制（需申请）',
-    studentStatus: '无'
+    level: '中外合作办学',
+    features: '**中西结合**：在国内享受国际化教育，部分时间可能在海外学习。**费用适中，获得双学位**。',
+    nationalityRequirement: '无限制',
+    studentStatus: '有'
   },
 
   // 研究生阶段
   {
     stage: '研究生',
     level: '国内硕士',
-    features: '通过全国统一招生考试或申请-考核制入学。',
-    nationalityRequirement: '无限制（通过考研/考博）',
+    features: '**深造首选**：学费相对较低，研究资源丰富。**需要考研高分，竞争激烈**。',
+    nationalityRequirement: '无限制',
     studentStatus: '有'
   },
   {
     stage: '研究生',
     level: '海外硕士',
-    features: '通过申请制入学，看重本科/硕士背景、研究成果、语言成绩等。',
-    nationalityRequirement: '无限制（需申请）',
+    features: '**国际深造**：接受前沿学术训练，提升国际竞争力。**费用较高，但回国就业优势明显**。',
+    nationalityRequirement: '无限制，但需要签证',
     studentStatus: '无'
   },
 
@@ -196,35 +168,15 @@ export const EDUCATION_LEVEL_FEATURES: EducationLevelFeature[] = [
   {
     stage: '博士',
     level: '国内博士',
-    features: '通过全国统一招生考试或申请-考核制入学。',
-    nationalityRequirement: '无限制（通过考研/考博）',
+    features: '**学术深造**：在国内进行深入学术研究，费用相对较低。**研究周期长，就业面相对较窄**。',
+    nationalityRequirement: '无限制',
     studentStatus: '有'
   },
   {
     stage: '博士',
     level: '海外博士',
-    features: '通过申请制入学，看重本科/硕士背景、研究成果、语言成绩等。',
-    nationalityRequirement: '无限制（需申请）',
+    features: '**国际学术**：接受国际前沿学术训练，研究资源丰富。**费用高，但学术声誉和就业前景优秀**。',
+    nationalityRequirement: '无限制，但需要签证',
     studentStatus: '无'
   }
 ];
-
-/**
- * 根据阶段和水平获取教育特点
- * @param stage 教育阶段
- * @param level 教育水平
- * @returns 教育特点信息
- */
-export function getEducationLevelFeature(stage: string, level: string): EducationLevelFeature | null {
-  return EDUCATION_LEVEL_FEATURES.find(feature => 
-    feature.stage === stage && feature.level === level
-  ) || null;
-}
-
-/**
- * 获取所有教育阶段的特点
- * @returns 所有教育特点信息
- */
-export function getAllEducationLevelFeatures(): EducationLevelFeature[] {
-  return EDUCATION_LEVEL_FEATURES;
-}

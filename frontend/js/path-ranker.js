@@ -258,7 +258,7 @@ class PathRankerService {
    */
   isTransition(fromLevel, toLevel) {
     const domesticLevels = ['公立', '普通私立', '民办普通高中', '国内公办', '国内民办'];
-    const internationalLevels = ['民办双语', '外籍人员子女学校', '民办国际化学校', '海外高中', '海外大学', '海外硕士', '海外博士'];
+    const internationalLevels = ['民办双语', '民办国际化学校', '海外高中', '海外大学', '海外硕士', '海外博士'];
     
     const fromIsDomestic = domesticLevels.includes(fromLevel);
     const toIsInternational = internationalLevels.includes(toLevel);
@@ -295,8 +295,7 @@ class PathRankerService {
       }
       
       // 分析转轨特征
-      if (node.level === '外籍人员子女学校' || 
-          node.level === '民办双语' || 
+      if (node.level === '民办双语' || 
           node.level === '民办国际化学校' ||
           node.level === '海外高中') {
         if (node.stage === '小学' || node.stage === '初中') {

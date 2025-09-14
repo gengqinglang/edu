@@ -132,7 +132,6 @@ export const STRATEGIC_ROUTE_CONFIGS: StrategicRouteConfig[] = [
     advantages: [],
     disadvantages: ['需要特殊条件', '实现难度大', '政策限制多'],
     examples: [
-      '包含外籍人员子女学校但无外籍身份的路径',
       '包含公立国际部但无户籍的路径'
     ],
     priority: 6

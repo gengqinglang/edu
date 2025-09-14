@@ -79,9 +79,9 @@ export class PathClustererService {
     switch (stage) {
       case '小学':
       case '初中':
-        return level === '民办双语' || level === '外籍人员子女学校';
+        return level === '民办双语';
       case '高中':
-        return level === '公立国际部' || level === '民办国际化学校' || level === '外籍人员子女学校';
+        return level === '公立国际部' || level === '民办国际化学校';
       case '大学':
       case '研究生':
         return level === '海外大学' || level === '海外硕士';
@@ -184,8 +184,7 @@ export class PathClustererService {
       }
       
       // 分析转轨特征
-      if (node.level === '外籍人员子女学校' || 
-          node.level === '民办双语' || 
+      if (node.level === '民办双语' || 
           node.level === '民办国际化学校') {
         if (node.stage === '小学' || node.stage === '初中') {
           features.push('early_transition');

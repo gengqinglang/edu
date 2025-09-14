@@ -8,7 +8,6 @@ export class MatchScoreCalculatorService {
   // 国际体系水平集合
   private readonly internationalLevels: Set<EducationLevel> = new Set([
     '民办双语',
-    '外籍人员子女学校',
     '公立国际部',
     '民办国际化学校',
     '海外高中',

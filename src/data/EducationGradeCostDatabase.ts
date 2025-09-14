@@ -43,18 +43,6 @@ export const EDUCATION_GRADE_COST_DATABASE: GradeCost[] = [
     },
     source: '市场均价估算（北京上海）'
   },
-  {
-    stage: '幼儿园' as EducationStage,
-    level: '外籍人员子女学校' as EducationLevel,
-    grade: 1,
-    cost: { 
-      tuition: 200000, 
-      meals: 12000, 
-      other: 20000, 
-      source: '外籍人员子女学校标准费用' 
-    },
-    source: '外籍人员子女学校标准费用'
-  },
 
   // 幼儿园中班（2年级）
   {
@@ -92,18 +80,6 @@ export const EDUCATION_GRADE_COST_DATABASE: GradeCost[] = [
       source: '市场均价估算（北京上海）' 
     },
     source: '市场均价估算（北京上海）'
-  },
-  {
-    stage: '幼儿园' as EducationStage,
-    level: '外籍人员子女学校' as EducationLevel,
-    grade: 2,
-    cost: { 
-      tuition: 200000, 
-      meals: 12000, 
-      other: 20000, 
-      source: '外籍人员子女学校标准费用' 
-    },
-    source: '外籍人员子女学校标准费用'
   },
 
   // 幼儿园大班（3年级）
@@ -143,22 +119,10 @@ export const EDUCATION_GRADE_COST_DATABASE: GradeCost[] = [
     },
     source: '市场均价估算（北京上海）'
   },
-  {
-    stage: '幼儿园' as EducationStage,
-    level: '外籍人员子女学校' as EducationLevel,
-    grade: 3,
-    cost: { 
-      tuition: 200000, 
-      meals: 12000, 
-      other: 20000, 
-      source: '外籍人员子女学校标准费用' 
-    },
-    source: '外籍人员子女学校标准费用'
-  },
 
   // ========== 小学 ==========
   // 小学1-6年级
-  ...Array.from({ length: 6 }, (_, i) => i + 1).flatMap(grade => [
+  ...[1, 2, 3, 4, 5, 6].flatMap(grade => [
     {
       stage: '小学' as EducationStage,
       level: '公立' as EducationLevel,
@@ -194,24 +158,12 @@ export const EDUCATION_GRADE_COST_DATABASE: GradeCost[] = [
         source: '市场均价估算（北京上海）' 
       },
       source: '市场均价估算（北京上海）'
-    },
-    {
-      stage: '小学' as EducationStage,
-      level: '外籍人员子女学校' as EducationLevel,
-      grade: grade,
-      cost: { 
-        tuition: 250000, 
-        materials: 10000, 
-        other: 15000, 
-        source: '外籍人员子女学校标准费用' 
-      },
-      source: '外籍人员子女学校标准费用'
     }
   ]),
 
   // ========== 初中 ==========
   // 初中1-3年级
-  ...Array.from({ length: 3 }, (_, i) => i + 1).flatMap(grade => [
+  ...[1, 2, 3].flatMap(grade => [
     {
       stage: '初中' as EducationStage,
       level: '公立' as EducationLevel,
@@ -247,24 +199,12 @@ export const EDUCATION_GRADE_COST_DATABASE: GradeCost[] = [
         source: '市场均价估算（北京上海）' 
       },
       source: '市场均价估算（北京上海）'
-    },
-    {
-      stage: '初中' as EducationStage,
-      level: '外籍人员子女学校' as EducationLevel,
-      grade: grade,
-      cost: { 
-        tuition: 280000, 
-        materials: 12000, 
-        other: 18000, 
-        source: '外籍人员子女学校标准费用' 
-      },
-      source: '外籍人员子女学校标准费用'
     }
   ]),
 
   // ========== 高中 ==========
   // 高中1-3年级
-  ...Array.from({ length: 3 }, (_, i) => i + 1).flatMap(grade => [
+  ...[1, 2, 3].flatMap(grade => [
     {
       stage: '高中' as EducationStage,
       level: '公立' as EducationLevel,
@@ -316,19 +256,6 @@ export const EDUCATION_GRADE_COST_DATABASE: GradeCost[] = [
     },
     {
       stage: '高中' as EducationStage,
-      level: '外籍人员子女学校' as EducationLevel,
-      grade: grade,
-      cost: { 
-        tuition: 350000, 
-        boarding: 60000, 
-        materials: 18000, 
-        other: 30000, 
-        source: '外籍人员子女学校标准费用' 
-      },
-      source: '外籍人员子女学校标准费用'
-    },
-    {
-      stage: '高中' as EducationStage,
       level: '海外高中' as EducationLevel,
       grade: grade,
       cost: { 
@@ -344,7 +271,7 @@ export const EDUCATION_GRADE_COST_DATABASE: GradeCost[] = [
 
   // ========== 大学 ==========
   // 大学1-4年级
-  ...Array.from({ length: 4 }, (_, i) => i + 1).flatMap(grade => [
+  ...[1, 2, 3, 4].flatMap(grade => [
     {
       stage: '大学' as EducationStage,
       level: '国内公办' as EducationLevel,
@@ -400,8 +327,8 @@ export const EDUCATION_GRADE_COST_DATABASE: GradeCost[] = [
   ]),
 
   // ========== 研究生 ==========
-  // 研究生1-3年级（硕士通常2-3年）
-  ...Array.from({ length: 3 }, (_, i) => i + 1).flatMap(grade => [
+  // 研究生1-3年级
+  ...[1, 2, 3].flatMap(grade => [
     {
       stage: '研究生' as EducationStage,
       level: '国内硕士' as EducationLevel,
@@ -414,7 +341,11 @@ export const EDUCATION_GRADE_COST_DATABASE: GradeCost[] = [
         source: '国内研究生一般标准' 
       },
       source: '国内研究生一般标准'
-    },
+    }
+  ]),
+
+  // 海外硕士（2年制）
+  ...[1, 2].flatMap(grade => [
     {
       stage: '研究生' as EducationStage,
       level: '海外硕士' as EducationLevel,
@@ -431,8 +362,8 @@ export const EDUCATION_GRADE_COST_DATABASE: GradeCost[] = [
   ]),
 
   // ========== 博士 ==========
-  // 博士1-5年级
-  ...Array.from({ length: 5 }, (_, i) => i + 1).flatMap(grade => [
+  // 博士1-4年级（国内）
+  ...[1, 2, 3, 4].flatMap(grade => [
     {
       stage: '博士' as EducationStage,
       level: '国内博士' as EducationLevel,
@@ -445,7 +376,11 @@ export const EDUCATION_GRADE_COST_DATABASE: GradeCost[] = [
         source: '国内博士一般标准' 
       },
       source: '国内博士一般标准'
-    },
+    }
+  ]),
+
+  // 博士1-5年级（海外）
+  ...[1, 2, 3, 4, 5].flatMap(grade => [
     {
       stage: '博士' as EducationStage,
       level: '海外博士' as EducationLevel,
