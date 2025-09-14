@@ -747,6 +747,37 @@ class EducationPathApp {
             inputSection.style.display = 'none';
         }
         
+        // 移除已存在的按钮（避免重复）
+        const existingBtn = document.getElementById('backToFormBtn');
+        if (existingBtn) {
+            existingBtn.remove();
+        }
+        
+        // 在结果区域前添加重新规划按钮
+        const backToFormBtn = document.createElement('button');
+        backToFormBtn.className = 'btn btn-secondary';
+        backToFormBtn.id = 'backToFormBtn';
+        backToFormBtn.style.cssText = `
+            position: absolute;
+            top: -60px;
+            left: 0;
+            z-index: 10;
+            margin-bottom: 1rem;
+        `;
+        backToFormBtn.innerHTML = '<span>← 重新规划</span>';
+        
+        // 设置结果区域相对定位以便按钮绝对定位
+        this.resultsSection.style.position = 'relative';
+        this.resultsSection.style.marginTop = '60px';
+        
+        // 添加按钮到结果区域
+        this.resultsSection.appendChild(backToFormBtn);
+        
+        // 绑定按钮事件
+        backToFormBtn.addEventListener('click', () => {
+            this.showFormSection();
+        });
+        
         // 显示结果区域
         this.resultsSection.style.display = 'block';
         this.strategicRoutesContainer.style.display = 'block';
@@ -760,16 +791,6 @@ class EducationPathApp {
         
         // 调试信息
         console.log('显示教育方向:', this.strategicRoutes.map(r => ({ id: r.id, name: r.name })));
-        
-        // 等待DOM更新后绑定重新规划按钮事件
-        setTimeout(() => {
-            const backToFormBtn = document.getElementById('backToFormBtn');
-            if (backToFormBtn) {
-                backToFormBtn.addEventListener('click', () => {
-                    this.showFormSection();
-                });
-            }
-        }, 100);
         
         // 分离路线：第一个分区包含所有可行路线（包括其他个性化路线），第二个分区只包含不可行路线
         const feasibleRoutes = this.strategicRoutes.filter(route => route.id !== 'infeasible_paths');
@@ -999,6 +1020,16 @@ class EducationPathApp {
             inputSection.style.display = 'block';
         }
         
+        // 移除重新规划按钮
+        const backToFormBtn = document.getElementById('backToFormBtn');
+        if (backToFormBtn) {
+            backToFormBtn.remove();
+        }
+        
+        // 重置结果区域样式
+        this.resultsSection.style.position = '';
+        this.resultsSection.style.marginTop = '';
+        
         // 隐藏结果区域
         this.resultsSection.style.display = 'none';
         
@@ -1202,11 +1233,6 @@ class EducationPathApp {
         
         return `
             <div class="results-header">
-                <div class="results-header-top">
-                    <button class="btn btn-secondary" id="backToFormBtn" style="margin-bottom: 1rem;">
-                        <span>← 重新规划</span>
-                    </button>
-                </div>
                 <h1 class="report-title">您的教育规划方案</h1>
                 <p class="report-subtitle">基于您的现状和目标，我们为您推荐以下教育方向，每个方向都经过可行性验证。</p>
                 
