@@ -134,6 +134,58 @@ class EducationPathApp {
             });
         }
 
+        // 教育水平帮助按钮
+        const educationLevelHelpBtn = document.getElementById('educationLevelHelpBtn');
+        if (educationLevelHelpBtn) {
+            educationLevelHelpBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.showEducationLevelModal();
+            });
+        }
+
+        // 模态框关闭按钮
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', () => {
+                this.hideEducationLevelModal();
+            });
+        }
+        if (modalConfirmBtn) {
+            modalConfirmBtn.addEventListener('click', () => {
+                this.hideEducationLevelModal();
+            });
+        }
+
+        // 模态框背景点击关闭
+        const educationLevelModal = document.getElementById('educationLevelModal');
+        if (educationLevelModal) {
+            educationLevelModal.addEventListener('click', (e) => {
+                if (e.target === educationLevelModal) {
+                    this.hideEducationLevelModal();
+                }
+            });
+        }
+
+        // 模态框内教育阶段选择器
+        const stageTabsModal = document.getElementById('stageTabsModal');
+        if (stageTabsModal) {
+            stageTabsModal.addEventListener('click', (e) => {
+                if (e.target.classList.contains('stage-tab')) {
+                    // 移除所有active状态
+                    stageTabsModal.querySelectorAll('.stage-tab').forEach(tab => {
+                        tab.classList.remove('active');
+                    });
+                    // 添加当前选中的active状态
+                    e.target.classList.add('active');
+                    // 更新模态框内容
+                    const selectedStage = e.target.dataset.stage;
+                    this.updateModalLevelsComparison(selectedStage);
+                }
+            });
+        }
+
         // 路径筛选选项
         if (this.showRarePathsCheckbox) {
             this.showRarePathsCheckbox.addEventListener('change', () => {
@@ -1948,6 +2000,123 @@ class EducationPathApp {
                 });
             });
         });
+    }
+
+    /**
+     * 显示教育水平特点模态框
+     */
+    showEducationLevelModal() {
+        try {
+            const modal = document.getElementById('educationLevelModal');
+            
+            if (modal) {
+                modal.style.display = 'flex';
+                modal.classList.add('show'); // 添加show类以覆盖CSS隐藏规则
+                // 初始化显示幼儿园阶段的数据
+                this.updateModalLevelsComparison('幼儿园');
+                
+                // 阻止页面滚动
+                document.body.style.overflow = 'hidden';
+                
+                // 添加ESC键关闭功能
+                this.modalEscHandler = (e) => {
+                    if (e.key === 'Escape') {
+                        this.hideEducationLevelModal();
+                    }
+                };
+                document.addEventListener('keydown', this.modalEscHandler);
+            }
+        } catch (error) {
+            console.error('显示模态框时出错:', error);
+        }
+    }
+
+    /**
+     * 隐藏教育水平特点模态框
+     */
+    hideEducationLevelModal() {
+        const modal = document.getElementById('educationLevelModal');
+        if (modal) {
+            modal.style.display = 'none';
+            modal.classList.remove('show'); // 移除show类
+            
+            // 恢复页面滚动
+            document.body.style.overflow = '';
+            
+            // 移除ESC键监听器
+            if (this.modalEscHandler) {
+                document.removeEventListener('keydown', this.modalEscHandler);
+                this.modalEscHandler = null;
+            }
+        }
+    }
+
+    /**
+     * 更新模态框中的教育水平对比内容
+     */
+    updateModalLevelsComparison(stage) {
+        try {
+            const levelsComparison = document.getElementById('levelsComparison');
+            
+            if (!levelsComparison) {
+                return;
+            }
+
+            // 获取该阶段的所有教育水平
+            const levels = this.stageLevelMapping[stage] || [];
+            
+            if (levels.length === 0) {
+                levelsComparison.innerHTML = '<p class="text-muted">该阶段暂无详细特点信息</p>';
+                return;
+            }
+
+            // 生成每个教育水平的卡片
+            const levelCards = levels.map(level => {
+                const featureInfo = this.educationLevelFeatures.getFullFeatureInfo(stage, level);
+                
+                if (!featureInfo || !featureInfo.hasInfo) {
+                    return `
+                        <div class="level-card">
+                            <div class="level-header">
+                                <h4 class="level-name">${level}</h4>
+                            </div>
+                            <div class="level-features">
+                                暂无详细特点信息
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // 处理特点文本，转换Markdown样式的粗体为HTML
+                const formattedFeatures = featureInfo.features ? featureInfo.features.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') : '暂无特点信息';
+
+                return `
+                    <div class="level-card">
+                        <div class="level-header">
+                            <h4 class="level-name">${level}</h4>
+                            <span class="level-badge">${stage}</span>
+                        </div>
+                        <div class="level-features">
+                            ${formattedFeatures}
+                        </div>
+                        <div class="level-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">国籍要求：</span>
+                                <span class="meta-value">${featureInfo.nationalityRequirement || '无特殊要求'}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">学籍情况：</span>
+                                <span class="meta-value">${featureInfo.studentStatus === '有' ? '有国内学籍' : featureInfo.studentStatus === '无' ? '无国内学籍' : featureInfo.studentStatus}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            levelsComparison.innerHTML = levelCards;
+        } catch (error) {
+            console.error('更新模态框内容时出错:', error);
+        }
     }
 }
 
