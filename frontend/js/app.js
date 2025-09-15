@@ -2057,6 +2057,7 @@ class EducationPathApp {
      * 更新模态框中的教育水平对比内容
      */
     updateModalLevelsComparison(stage) {
+        let levels;
         try {
             console.log('更新模态框内容，阶段:', stage);
             const levelsComparison = document.getElementById('levelsComparison');
@@ -2068,67 +2069,67 @@ class EducationPathApp {
             }
 
             // 获取该阶段的所有教育水平
-            const levels = this.stageLevelMapping[stage] || [];
+            levels = this.stageLevelMapping[stage] || [];
             console.log('该阶段的教育水平:', levels);
             
             if (levels.length === 0) {
                 levelsComparison.innerHTML = '<p class="text-muted">该阶段暂无详细特点信息</p>';
                 return;
             }
-        } catch (error) {
-            console.error('更新模态框内容时出错:', error);
-            return;
-        }
 
-        // 生成每个教育水平的卡片
-        const levelCards = levels.map(level => {
-            console.log(`获取 ${stage}-${level} 的特点信息`);
-            const featureInfo = this.educationLevelFeatures.getFullFeatureInfo(stage, level);
-            console.log(`${stage}-${level} 特点信息:`, featureInfo);
-            
-            if (!featureInfo || !featureInfo.hasInfo) {
+            // 生成每个教育水平的卡片
+            const levelCards = levels.map(level => {
+                console.log(`获取 ${stage}-${level} 的特点信息`);
+                const featureInfo = this.educationLevelFeatures.getFullFeatureInfo(stage, level);
+                console.log(`${stage}-${level} 特点信息:`, featureInfo);
+                
+                if (!featureInfo || !featureInfo.hasInfo) {
+                    return `
+                        <div class="level-card">
+                            <div class="level-header">
+                                <h4 class="level-name">${level}</h4>
+                            </div>
+                            <div class="level-features">
+                                暂无详细特点信息
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // 处理特点文本，转换Markdown样式的粗体为HTML
+                const formattedFeatures = featureInfo.features ? featureInfo.features.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') : '暂无特点信息';
+
                 return `
                     <div class="level-card">
                         <div class="level-header">
                             <h4 class="level-name">${level}</h4>
+                            <span class="level-badge">${stage}</span>
                         </div>
                         <div class="level-features">
-                            暂无详细特点信息
+                            ${formattedFeatures}
+                        </div>
+                        <div class="level-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">国籍要求：</span>
+                                <span class="meta-value">${featureInfo.nationalityRequirement || '无特殊要求'}</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">学籍情况：</span>
+                                <span class="meta-value">${featureInfo.studentStatus === '有' ? '有国内学籍' : featureInfo.studentStatus === '无' ? '无国内学籍' : featureInfo.studentStatus}</span>
+                            </div>
                         </div>
                     </div>
                 `;
-            }
+            }).join('');
 
-            // 处理特点文本，转换Markdown样式的粗体为HTML
-            const formattedFeatures = featureInfo.features ? featureInfo.features.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') : '暂无特点信息';
-
-            return `
-                <div class="level-card">
-                    <div class="level-header">
-                        <h4 class="level-name">${level}</h4>
-                        <span class="level-badge">${stage}</span>
-                    </div>
-                    <div class="level-features">
-                        ${formattedFeatures}
-                    </div>
-                    <div class="level-meta">
-                        <div class="meta-item">
-                            <span class="meta-label">国籍要求：</span>
-                            <span class="meta-value">${featureInfo.nationalityRequirement || '无特殊要求'}</span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="meta-label">学籍情况：</span>
-                            <span class="meta-value">${featureInfo.studentStatus === '有' ? '有国内学籍' : featureInfo.studentStatus === '无' ? '无国内学籍' : featureInfo.studentStatus}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-        console.log('生成的HTML内容长度:', levelCards.length);
-        console.log('生成的HTML内容预览:', levelCards.substring(0, 200));
-        levelsComparison.innerHTML = levelCards;
-        console.log('模态框内容更新完成');
+            console.log('生成的HTML内容长度:', levelCards.length);
+            console.log('生成的HTML内容预览:', levelCards.substring(0, 200));
+            const levelsComparison = document.getElementById('levelsComparison');
+            levelsComparison.innerHTML = levelCards;
+            console.log('模态框内容更新完成');
+        } catch (error) {
+            console.error('更新模态框内容时出错:', error);
+        }
     }
 }
 
