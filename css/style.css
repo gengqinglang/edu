@@ -2828,11 +2828,12 @@ body {
     transition: all 0.2s ease;
     z-index: 10;
     line-height: 1;
+    border: none; /* 确保没有边框 */
 }
 
 .option-help-icon:hover {
-    background: #0097A7 !important;
-    transform: translateY(-50%) scale(1.1) !important;
+    background: #0097A7;
+    transform: translateY(-50%) scale(1.1);
 }
 
 /* ==================== 教育水平特征弹窗样式 ==================== */
