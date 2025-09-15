@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问号图标调试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        
+        /* 基础的选项按钮样式 */
+        .option-btn {
+            padding: 0.75rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: white;
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            margin: 5px;
+            display: inline-block;
+            min-width: 120px;
+            position: relative;
+        }
+        
+        .option-btn.active {
+            border-color: #01BCD6;
+            background-color: #01BCD6;
+            color: white;
+        }
+        
+        /* 包含问号的选项按钮特殊样式 */
+        .option-btn-with-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .option-text {
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        /* 问号图标样式 */
+        .option-help-icon {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #01BCD6;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .option-help-icon:hover {
+            background: #0097A7;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        /* 调试样式 */
+        .debug .option-help-icon {
+            background: red !important;
+            border: 2px solid yellow !important;
+            font-size: 12px !important;
+        }
+    </style>
+</head>
+<body>
+    <h1>问号图标调试页面</h1>
+    
+    <div class="test-container">
+        <h3>测试1：基础问号图标（应该显示红色圆形）</h3>
+        <div class="debug">
+            <button class="option-btn option-btn-with-icon active">
+                <span class="option-text">公立</span>
+                <span class="option-help-icon">?</span>
+            </button>
+            <button class="option-btn option-btn-with-icon">
+                <span class="option-text">普通私立</span>
+                <span class="option-help-icon">?</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h3>测试2：正常颜色问号图标（应该显示蓝色圆形）</h3>
+        <button class="option-btn option-btn-with-icon active">
+            <span class="option-text">公立</span>
+            <span class="option-help-icon">?</span>
+        </button>
+        <button class="option-btn option-btn-with-icon">
+            <span class="option-text">普通私立</span>
+            <span class="option-help-icon">?</span>
+        </button>
+        <button class="option-btn option-btn-with-icon">
+            <span class="option-text">民办双语</span>
+            <span class="option-help-icon">?</span>
+        </button>
+    </div>
+    
+    <div class="test-container">
+        <h3>测试3：普通选项（不应该有问号）</h3>
+        <button class="option-btn active">幼儿园</button>
+        <button class="option-btn">小学</button>
+        <button class="option-btn">初中</button>
+    </div>
+    
+    <div class="test-container">
+        <h3>测试4：使用项目原始样式</h3>
+        <link rel="stylesheet" href="css/style.css">
+        <div class="option-grid" id="currentLevelOptions">
+            <button type="button" class="option-btn active" data-value="公立">
+                <span class="option-text">公立</span>
+                <span class="option-help-icon" data-level="公立" title="查看公立教育特点">?</span>
+            </button>
+            <button type="button" class="option-btn" data-value="普通私立">
+                <span class="option-text">普通私立</span>
+                <span class="option-help-icon" data-level="普通私立" title="查看普通私立教育特点">?</span>
+            </button>
+            <button type="button" class="option-btn" data-value="民办双语">
+                <span class="option-text">民办双语</span>
+                <span class="option-help-icon" data-level="民办双语" title="查看民办双语教育特点">?</span>
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const helpIcons = document.querySelectorAll('.option-help-icon');
+            console.log('找到问号图标数量:', helpIcons.length);
+            
+            helpIcons.forEach((icon, index) => {
+                console.log(`问号图标 ${index + 1}:`, {
+                    element: icon,
+                    display: getComputedStyle(icon).display,
+                    position: getComputedStyle(icon).position,
+                    background: getComputedStyle(icon).background,
+                    width: getComputedStyle(icon).width,
+                    height: getComputedStyle(icon).height,
+                    zIndex: getComputedStyle(icon).zIndex
+                });
+            });
+        });
+    </script>
+</body>
+</html>

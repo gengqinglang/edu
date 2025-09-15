@@ -2793,16 +2793,8 @@ body {
 }
 
 /* ==================== 选项按钮内问号样式 ==================== */
-/* 只对包含问号图标的选项按钮应用特殊布局 */
-.option-btn:has(.option-help-icon) {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.75rem 1rem;
-}
 
-/* 兼容性备选方案：为当前教育水平的选项按钮应用特殊样式 */
+/* 为当前教育水平的选项按钮应用特殊样式 */
 #currentLevelOptions .option-btn {
     position: relative;
     display: flex;
@@ -2816,24 +2808,26 @@ body {
     text-align: center;
 }
 
+/* 问号图标样式 */
 .option-help-icon {
-    position: absolute !important;
-    right: 0.5rem !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    width: 18px !important;
-    height: 18px !important;
-    border-radius: 50% !important;
-    background: #01BCD6 !important;
-    color: white !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-size: 0.7rem !important;
-    font-weight: bold !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-    z-index: 10 !important;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #01BCD6;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+    line-height: 1;
 }
 
 .option-help-icon:hover {

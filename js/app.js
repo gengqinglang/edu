@@ -282,7 +282,20 @@ class EducationPathApp {
                 button.type = 'button';
                 button.className = 'option-btn';
                 button.dataset.value = level;
-                button.textContent = level;
+                
+                // 创建包含文本和问号图标的结构
+                const textSpan = document.createElement('span');
+                textSpan.className = 'option-text';
+                textSpan.textContent = level;
+                
+                const helpIcon = document.createElement('span');
+                helpIcon.className = 'option-help-icon';
+                helpIcon.dataset.level = level;
+                helpIcon.title = `查看${level}教育特点`;
+                helpIcon.textContent = '?';
+                
+                button.appendChild(textSpan);
+                button.appendChild(helpIcon);
                 this.currentLevelOptions.appendChild(button);
             });
             
