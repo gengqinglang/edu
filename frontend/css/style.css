@@ -2900,7 +2900,7 @@ body {
 }
 
 .stage-tab.active {
-    background: var(--primary-color);
+    background: #01BCD6;
     color: white;
 }
 
@@ -2932,13 +2932,13 @@ body {
 .level-name {
     font-size: var(--font-size-md);
     font-weight: 600;
-    color: var(--primary-color);
+    color: #01BCD6;
     margin: 0;
 }
 
 .level-badge {
-    background: var(--primary-light);
-    color: var(--primary-color);
+    background: #E0F7FC;
+    color: #01BCD6;
     padding: 0.25rem 0.5rem;
     border-radius: var(--radius-sm);
     font-size: 0.75rem;
