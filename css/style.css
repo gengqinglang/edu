@@ -2792,28 +2792,36 @@ body {
     }
 }
 
-/* ==================== 选项按钮内问号样式 ==================== */
+/* ==================== 教育水平选项与问号图标样式 ==================== */
 
-/* 为当前教育水平的选项按钮应用特殊样式 */
-#currentLevelOptions .option-btn {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.75rem 1rem;
+/* 带问号的选项网格容器 */
+.option-grid-with-help {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
 }
 
-.option-text {
-    flex-grow: 1;
+/* 兼容原有的option-grid类名 */
+#currentLevelOptions.option-grid-with-help {
+    display: grid;
+}
+
+/* 选项项容器（包含按钮和问号） */
+.option-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* 选项按钮恢复到简洁样式 */
+.option-item .option-btn {
+    flex: 1;
     text-align: center;
 }
 
-/* 问号图标样式 */
+/* 问号图标样式（位于按钮外侧） */
 .option-help-icon {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
     width: 18px;
     height: 18px;
     border-radius: 50%;
@@ -2826,14 +2834,32 @@ body {
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s ease;
-    z-index: 10;
+    border: none;
     line-height: 1;
-    border: none; /* 确保没有边框 */
+    flex-shrink: 0;
 }
 
 .option-help-icon:hover {
     background: #0097A7;
-    transform: translateY(-50%) scale(1.1);
+    transform: scale(1.1);
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .option-grid-with-help {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xs);
+    }
+    
+    .option-item {
+        gap: 6px;
+    }
+    
+    .option-help-icon {
+        width: 16px;
+        height: 16px;
+        font-size: 10px;
+    }
 }
 
 /* ==================== 教育水平特征弹窗样式 ==================== */

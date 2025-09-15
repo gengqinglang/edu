@@ -278,25 +278,28 @@ class EducationPathApp {
         
         if (levels.length > 0) {
             levels.forEach(level => {
+                // 创建选项项容器
+                const optionItem = document.createElement('div');
+                optionItem.className = 'option-item';
+                
+                // 创建选项按钮
                 const button = document.createElement('button');
                 button.type = 'button';
                 button.className = 'option-btn';
                 button.dataset.value = level;
+                button.textContent = level;
                 
-                // 创建包含文本和问号图标的结构
-                const textSpan = document.createElement('span');
-                textSpan.className = 'option-text';
-                textSpan.textContent = level;
-                
+                // 创建问号图标
                 const helpIcon = document.createElement('span');
                 helpIcon.className = 'option-help-icon';
                 helpIcon.dataset.level = level;
                 helpIcon.title = `查看${level}教育特点`;
                 helpIcon.textContent = '?';
                 
-                button.appendChild(textSpan);
-                button.appendChild(helpIcon);
-                this.currentLevelOptions.appendChild(button);
+                // 组装结构
+                optionItem.appendChild(button);
+                optionItem.appendChild(helpIcon);
+                this.currentLevelOptions.appendChild(optionItem);
             });
             
             // 设置默认选中第一个教育水平
