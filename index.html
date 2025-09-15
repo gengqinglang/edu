@@ -3,78 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>教育规划系统</title>
-    <meta http-equiv="refresh" content="0; url=./frontend/index.html">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .container {
-            max-width: 600px;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        p {
-            font-size: 1.2em;
-            margin-bottom: 30px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 15px 30px;
-            background: #01BCD6;
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 1.1em;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(1, 188, 214, 0.4);
-        }
-        .btn:hover {
-            background: #0097A7;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(1, 188, 214, 0.6);
-        }
-        .loading {
-            margin-top: 20px;
-            font-size: 0.9em;
-            opacity: 0.8;
-        }
-    </style>
+    <title>教育路径规划及费用精算系统</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1>🎓 教育规划系统</h1>
-        <p>智能教育路径规划，为您的未来指明方向</p>
-        <p class="loading">正在为您跳转到系统主页...</p>
-        <a href="./frontend/index.html" class="btn">立即进入系统</a>
+        <!-- 头部 -->
+        <header class="header">
+            <h1 class="title">教育路径规划及费用精算系统</h1>
+            <p class="subtitle">智能规划教育发展路径，精准计算教育投资成本</p>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <!-- 输入表单 -->
+            <section class="input-section">
+                <div class="form-container">
+                    <h2 class="section-title">基本信息</h2>
+                    
+                    <form id="educationForm" class="education-form">
+                        <!-- 当前教育阶段 -->
+                        <div class="form-group">
+                            <label class="form-label">当前教育阶段</label>
+                            <div class="option-grid" id="currentStageOptions">
+                                <button type="button" class="option-btn active" data-value="幼儿园">幼儿园</button>
+                                <button type="button" class="option-btn" data-value="小学">小学</button>
+                                <button type="button" class="option-btn" data-value="初中">初中</button>
+                                <button type="button" class="option-btn" data-value="高中">高中</button>
+                                <button type="button" class="option-btn" data-value="大学">大学</button>
+                                <button type="button" class="option-btn" data-value="研究生">研究生</button>
+                                <button type="button" class="option-btn" data-value="博士">博士</button>
+                            </div>
+                            <input type="hidden" id="currentStage" name="currentStage" value="幼儿园" required>
+                        </div>
+
+                        <!-- 当前年级 -->
+                        <div class="form-group">
+                            <label class="form-label">当前年级</label>
+                            <div class="option-grid" id="currentGradeOptions">
+                                <button type="button" class="option-btn active" data-value="1年级">1年级</button>
+                                <button type="button" class="option-btn" data-value="2年级">2年级</button>
+                                <button type="button" class="option-btn" data-value="3年级">3年级</button>
+                            </div>
+                            <input type="hidden" id="currentGrade" name="currentGrade" value="1年级" required>
+                        </div>
+
+                        <!-- 当前教育水平 -->
+                        <div class="form-group">
+                            <label class="form-label">当前教育水平</label>
+                            <div class="option-grid" id="currentLevelOptions">
+                                <button type="button" class="option-btn active" data-value="公立">公立</button>
+                                <button type="button" class="option-btn" data-value="普通私立">普通私立</button>
+                                <button type="button" class="option-btn" data-value="民办双语">民办双语</button>
+                            </div>
+                            <input type="hidden" id="currentLevel" name="currentLevel" value="公立" required>
+                        </div>
+
+                        <!-- 目标阶段 -->
+                        <div class="form-group">
+                            <label class="form-label">目标教育阶段</label>
+                            <div class="option-grid" id="targetStageOptions">
+                                <button type="button" class="option-btn" data-value="小学">小学</button>
+                                <button type="button" class="option-btn" data-value="初中">初中</button>
+                                <button type="button" class="option-btn" data-value="高中">高中</button>
+                                <button type="button" class="option-btn active" data-value="大学">大学</button>
+                                <button type="button" class="option-btn" data-value="研究生">研究生</button>
+                                <button type="button" class="option-btn" data-value="博士">博士</button>
+                            </div>
+                            <input type="hidden" id="targetStage" name="targetStage" value="大学" required>
+                        </div>
+
+                        <!-- 提交按钮 -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <span class="btn-text">开始规划</span>
+                                <span class="btn-loading" style="display: none;">分析中...</span>
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="resetPlanBtn" style="display: none;">
+                                重新规划
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- 结果展示区域 -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-container">
+
+                    
+                    <!-- 教育方向选择 -->
+                    <div class="strategic-routes-container" id="strategicRoutesContainer">
+                        <!-- 教育方向卡片将通过JavaScript动态生成 -->
+                    </div>
+
+                    <!-- 路径详情区域 -->
+                    <div class="path-details-container" id="pathDetailsContainer" style="display: none;">
+                        <div class="path-details-header">
+                            <button class="btn btn-secondary" id="backToRoutesBtn">
+                                <span>← 返回</span>
+                            </button>
+                            <h3 class="path-details-title" id="pathDetailsTitle">路径详情</h3>
+                        </div>
+                        
+                        <!-- 路径筛选器 -->
+                        <div class="path-filters-container" id="pathFiltersContainer">
+                            <!-- 筛选器区域 -->
+                            <div class="filters-section">
+                                <div class="filters-header" id="filtersHeader">
+                                    <div class="filters-title-section">
+                                        <h4>筛选与排序</h4>
+                                        <span class="toggle-filters-icon" id="toggleFiltersBtn">▶</span>
+                                    </div>
+                                    <span class="reset-filters-text" id="resetFiltersBtn" title="重置所有筛选条件">重置</span>
+                                </div>
+                                
+                                <div class="filters-content" id="filtersContent" style="display: none;">
+                                    <div class="filters-grid">
+                                    <!-- 教育阶段筛选 -->
+                                    <div class="filter-group">
+                                        <label class="filter-label">锁定关键阶段：</label>
+                                        <div class="stage-dropdown-container">
+                                            <select id="stageSelect" class="stage-select">
+                                                <option value="">选择教育阶段</option>
+                                                <option value="小学">小学</option>
+                                                <option value="初中">初中</option>
+                                                <option value="高中">高中</option>
+                                                <option value="大学">大学</option>
+                                                <option value="研究生">研究生</option>
+                                                <option value="博士">博士</option>
+                                            </select>
+                                            <select id="levelSelect" class="level-select" disabled>
+                                                <option value="">选择教育水平</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 排序选择 -->
+                                    <div class="filter-group">
+                                        <label class="filter-label">排序方式：</label>
+                                        <div class="sort-buttons">
+                                            <button type="button" class="sort-btn" data-sort="prevalence">
+                                                <span class="sort-text">按常见度排序</span>
+                                            </button>
+                                            <button type="button" class="sort-btn" data-sort="cost-high">
+                                                <span class="sort-text">按总费用由高到低</span>
+                                            </button>
+                                            <button type="button" class="sort-btn" data-sort="cost-low">
+                                                <span class="sort-text">按总费用由低到高</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 费用区间筛选 -->
+                                    <div class="filter-group cost-range-group">
+                                        <label class="filter-label">总费用区间：</label>
+                                        <div class="cost-range-filter">
+                                            <div class="dual-range-slider">
+                                                <input type="range" id="costRangeMin" class="cost-range-input range-min" min="0" max="1000000" step="10000">
+                                                <input type="range" id="costRangeMax" class="cost-range-input range-max" min="0" max="1000000" step="10000">
+                                            </div>
+                                            <div class="cost-range-display">
+                                                <span id="costRangeMinDisplay">0</span> - <span id="costRangeMaxDisplay">0</span> 元
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 结果统计 -->
+                                    <div class="results-stats" id="resultsStats">
+                                        <span class="results-count">为您找到了 <strong id="filteredPathsCount">0</strong> 条匹配路径</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 路径差异提示 -->
+                        <div class="path-difference-hint">
+                            <span class="hint-icon">💡</span>
+                            <span class="hint-text">橙色标记表示与路径1的不同之处</span>
+                        </div>
+
+                        <!-- 路径列表 -->
+                        <div class="paths-container" id="pathsContainer">
+                            <!-- 路径列表将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>&copy; 2024 教育路径规划系统. 智能教育规划，助力未来发展.</p>
+        </footer>
     </div>
-    
-    <script>
-        // 如果自动跳转失败，3秒后手动跳转
-        setTimeout(function() {
-            if (window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/')) {
-                window.location.href = './frontend/index.html';
-            }
-        }, 3000);
-    </script>
+
+    <!-- 加载脚本 -->
+    <script src="js/education-data.js"></script>
+    <script src="js/education-types.js"></script>
+    <script src="js/education-cost-data.js"></script>
+    <script src="js/education-grade-cost-data.js"></script>
+    <script src="js/cost-calculator.js"></script>
+    <script src="js/match-score-calculator.js"></script>
+    <script src="js/education-level-features.js"></script>
+    <script src="js/personalized-content.js"></script>
+    <script src="js/strategic-route-templates.js"></script>
+    <script src="js/path-finder.js"></script>
+    <script src="js/path-clusterer.js"></script>
+    <script src="js/path-ranker.js"></script>
+    <script src="js/path-filter.js"></script>
+    <script src="js/hint-generator.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
