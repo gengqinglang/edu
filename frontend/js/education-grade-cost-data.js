@@ -1,7 +1,5 @@
-// 汇率转换 (美元对人民币，2024年汇率)
-const USD_TO_CNY = 7.2;
-
 // 按年级计算的教育费用数据库
+// 注意：USD_TO_CNY 汇率常量在 education-cost-data.js 中定义
 const EDUCATION_GRADE_COST_DATABASE = [
   // ========== 幼儿园 ==========
   // 幼儿园小班（1年级）

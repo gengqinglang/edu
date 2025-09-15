@@ -2000,49 +2000,6 @@ class EducationPathApp {
             });
         });
     }
-}
-
-// 添加动画样式
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(style);
-
-// 全局函数：切换教育水平特点的展开/折叠状态
-function toggleFeatures(featuresId) {
-    const featuresContent = document.getElementById(featuresId);
-    const toggleIcon = featuresContent.previousElementSibling.querySelector('.toggle-icon');
-    
-    if (featuresContent.style.display === 'none' || featuresContent.style.display === '') {
-        featuresContent.style.display = 'block';
-        toggleIcon.textContent = '▲';
-        featuresContent.parentElement.classList.add('expanded');
-    } else {
-        featuresContent.style.display = 'none';
-        toggleIcon.textContent = '▼';
-        featuresContent.parentElement.classList.remove('expanded');
-    }
 
     /**
      * 显示教育水平特点模态框
@@ -2172,6 +2129,49 @@ function toggleFeatures(featuresId) {
         console.log('生成的HTML内容预览:', levelCards.substring(0, 200));
         levelsComparison.innerHTML = levelCards;
         console.log('模态框内容更新完成');
+    }
+}
+
+// 添加动画样式
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+
+// 全局函数：切换教育水平特点的展开/折叠状态
+function toggleFeatures(featuresId) {
+    const featuresContent = document.getElementById(featuresId);
+    const toggleIcon = featuresContent.previousElementSibling.querySelector('.toggle-icon');
+    
+    if (featuresContent.style.display === 'none' || featuresContent.style.display === '') {
+        featuresContent.style.display = 'block';
+        toggleIcon.textContent = '▲';
+        featuresContent.parentElement.classList.add('expanded');
+    } else {
+        featuresContent.style.display = 'none';
+        toggleIcon.textContent = '▼';
+        featuresContent.parentElement.classList.remove('expanded');
     }
 }
 
