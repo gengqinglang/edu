@@ -2006,9 +2006,7 @@ class EducationPathApp {
      */
     showEducationLevelModal() {
         try {
-            console.log('显示教育水平模态框');
             const modal = document.getElementById('educationLevelModal');
-            console.log('模态框元素:', modal);
             
             if (modal) {
                 modal.style.display = 'flex';
@@ -2025,9 +2023,6 @@ class EducationPathApp {
                     }
                 };
                 document.addEventListener('keydown', this.modalEscHandler);
-                console.log('模态框显示成功');
-            } else {
-                console.error('找不到模态框元素');
             }
         } catch (error) {
             console.error('显示模态框时出错:', error);
@@ -2057,20 +2052,15 @@ class EducationPathApp {
      * 更新模态框中的教育水平对比内容
      */
     updateModalLevelsComparison(stage) {
-        let levels;
         try {
-            console.log('更新模态框内容，阶段:', stage);
             const levelsComparison = document.getElementById('levelsComparison');
-            console.log('levelsComparison元素:', levelsComparison);
             
             if (!levelsComparison) {
-                console.error('找不到levelsComparison元素');
                 return;
             }
 
             // 获取该阶段的所有教育水平
-            levels = this.stageLevelMapping[stage] || [];
-            console.log('该阶段的教育水平:', levels);
+            const levels = this.stageLevelMapping[stage] || [];
             
             if (levels.length === 0) {
                 levelsComparison.innerHTML = '<p class="text-muted">该阶段暂无详细特点信息</p>';
@@ -2079,9 +2069,7 @@ class EducationPathApp {
 
             // 生成每个教育水平的卡片
             const levelCards = levels.map(level => {
-                console.log(`获取 ${stage}-${level} 的特点信息`);
                 const featureInfo = this.educationLevelFeatures.getFullFeatureInfo(stage, level);
-                console.log(`${stage}-${level} 特点信息:`, featureInfo);
                 
                 if (!featureInfo || !featureInfo.hasInfo) {
                     return `
@@ -2122,11 +2110,7 @@ class EducationPathApp {
                 `;
             }).join('');
 
-            console.log('生成的HTML内容长度:', levelCards.length);
-            console.log('生成的HTML内容预览:', levelCards.substring(0, 200));
-            const levelsComparison = document.getElementById('levelsComparison');
             levelsComparison.innerHTML = levelCards;
-            console.log('模态框内容更新完成');
         } catch (error) {
             console.error('更新模态框内容时出错:', error);
         }
