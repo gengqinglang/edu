@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试问号图标</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container" style="max-width: 600px; margin: 2rem auto; padding: 2rem;">
+        <h2>测试问号图标显示</h2>
+        
+        <!-- 测试当前教育水平选项 -->
+        <div class="form-group">
+            <label class="form-label">当前教育水平（带问号图标）</label>
+            <div class="option-grid" id="currentLevelOptions">
+                <button type="button" class="option-btn active" data-value="公立">
+                    <span class="option-text">公立</span>
+                    <span class="option-help-icon" data-level="公立" title="查看公立教育特点">?</span>
+                </button>
+                <button type="button" class="option-btn" data-value="普通私立">
+                    <span class="option-text">普通私立</span>
+                    <span class="option-help-icon" data-level="普通私立" title="查看普通私立教育特点">?</span>
+                </button>
+                <button type="button" class="option-btn" data-value="民办双语">
+                    <span class="option-text">民办双语</span>
+                    <span class="option-help-icon" data-level="民办双语" title="查看民办双语教育特点">?</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 测试普通选项（不应该有问号） -->
+        <div class="form-group">
+            <label class="form-label">普通选项（不带问号图标）</label>
+            <div class="option-grid">
+                <button type="button" class="option-btn" data-value="选项1">选项1</button>
+                <button type="button" class="option-btn active" data-value="选项2">选项2</button>
+                <button type="button" class="option-btn" data-value="选项3">选项3</button>
+            </div>
+        </div>
+
+        <style>
+            /* 调试样式 */
+            .option-help-icon {
+                background: red !important;
+                border: 2px solid yellow !important;
+            }
+            
+            .option-btn {
+                border: 1px solid blue !important;
+            }
+        </style>
+    </div>
+</body>
+</html>
