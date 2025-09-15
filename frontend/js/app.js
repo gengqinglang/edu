@@ -136,11 +136,28 @@ class EducationPathApp {
 
         // 教育水平帮助按钮
         const educationLevelHelpBtn = document.getElementById('educationLevelHelpBtn');
+        console.log('查找帮助按钮:', educationLevelHelpBtn);
         if (educationLevelHelpBtn) {
+            console.log('绑定帮助按钮事件');
             educationLevelHelpBtn.addEventListener('click', (e) => {
+                console.log('帮助按钮被点击!');
                 e.preventDefault();
+                e.stopPropagation();
                 this.showEducationLevelModal();
             });
+            
+            // 添加额外的调试事件
+            educationLevelHelpBtn.addEventListener('mousedown', () => {
+                console.log('帮助按钮鼠标按下');
+            });
+            
+            educationLevelHelpBtn.addEventListener('mouseover', () => {
+                console.log('帮助按钮鼠标悬停');
+            });
+            
+            console.log('帮助按钮事件绑定完成');
+        } else {
+            console.error('找不到帮助按钮元素!');
         }
 
         // 模态框关闭按钮
@@ -2005,10 +2022,13 @@ class EducationPathApp {
      * 显示教育水平特点模态框
      */
     showEducationLevelModal() {
+        console.log('=== showEducationLevelModal 被调用 ===');
         try {
             const modal = document.getElementById('educationLevelModal');
+            console.log('模态框元素:', modal);
             
             if (modal) {
+                console.log('显示模态框');
                 modal.style.display = 'flex';
                 // 初始化显示幼儿园阶段的数据
                 this.updateModalLevelsComparison('幼儿园');
@@ -2023,6 +2043,9 @@ class EducationPathApp {
                     }
                 };
                 document.addEventListener('keydown', this.modalEscHandler);
+                console.log('模态框显示完成');
+            } else {
+                console.error('找不到模态框元素');
             }
         } catch (error) {
             console.error('显示模态框时出错:', error);
