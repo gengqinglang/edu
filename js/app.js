@@ -228,10 +228,19 @@ class EducationPathApp {
         input.value = value;
         
         // 更新按钮选中状态
-        const container = button.parentElement;
+        // 对于新的option-grid-with-help结构，需要找到正确的容器
+        let container = button.parentElement;
+        if (container.classList.contains('option-item')) {
+            // 如果是新结构，向上找到option-grid-with-help容器
+            container = container.parentElement;
+        }
+        
+        // 清除所有选项的选中状态
         container.querySelectorAll('.option-btn').forEach(btn => {
             btn.classList.remove('active', 'selected');
         });
+        
+        // 设置当前选项为选中状态
         button.classList.add('active');
     }
 
