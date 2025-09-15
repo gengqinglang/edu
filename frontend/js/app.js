@@ -2030,6 +2030,7 @@ class EducationPathApp {
             if (modal) {
                 console.log('显示模态框');
                 modal.style.display = 'flex';
+                modal.classList.add('show'); // 添加show类以覆盖CSS隐藏规则
                 // 初始化显示幼儿园阶段的数据
                 this.updateModalLevelsComparison('幼儿园');
                 
@@ -2059,6 +2060,7 @@ class EducationPathApp {
         const modal = document.getElementById('educationLevelModal');
         if (modal) {
             modal.style.display = 'none';
+            modal.classList.remove('show'); // 移除show类
             
             // 恢复页面滚动
             document.body.style.overflow = '';
