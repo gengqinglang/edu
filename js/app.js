@@ -144,6 +144,9 @@ class EducationPathApp {
             });
         }
 
+        // 选项按钮内的问号图标点击事件
+        this.bindOptionHelpEvents();
+
         // 模态框关闭按钮
         const closeModalBtn = document.getElementById('closeModalBtn');
         const modalConfirmBtn = document.getElementById('modalConfirmBtn');
@@ -2048,6 +2051,140 @@ class EducationPathApp {
                 document.removeEventListener('keydown', this.modalEscHandler);
                 this.modalEscHandler = null;
             }
+        }
+    }
+
+    // 绑定选项按钮内问号图标的点击事件
+    bindOptionHelpEvents() {
+        // 使用事件委托来处理动态生成的问号图标
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('option-help-icon')) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const level = e.target.getAttribute('data-level');
+                const currentStage = document.getElementById('currentStage').value;
+                this.showLevelTooltip(level, currentStage);
+            }
+        });
+
+        // 绑定弹窗关闭事件
+        const tooltipClose = document.getElementById('tooltipClose');
+        const levelTooltip = document.getElementById('levelTooltip');
+        
+        if (tooltipClose) {
+            tooltipClose.addEventListener('click', () => {
+                this.hideLevelTooltip();
+            });
+        }
+
+        if (levelTooltip) {
+            // 点击背景关闭弹窗
+            levelTooltip.addEventListener('click', (e) => {
+                if (e.target === levelTooltip) {
+                    this.hideLevelTooltip();
+                }
+            });
+        }
+
+        // ESC键关闭弹窗
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && levelTooltip && levelTooltip.classList.contains('show')) {
+                this.hideLevelTooltip();
+            }
+        });
+    }
+
+    // 显示单个教育水平特征弹窗
+    showLevelTooltip(level, stage) {
+        try {
+            const tooltip = document.getElementById('levelTooltip');
+            const title = document.getElementById('tooltipTitle');
+            const body = document.getElementById('tooltipBody');
+            
+            if (!tooltip || !title || !body) {
+                console.error('弹窗元素未找到');
+                return;
+            }
+
+            // 查找对应的教育水平特点数据
+            const levelData = EDUCATION_LEVEL_FEATURES.find(
+                item => item.stage === stage && item.level === level
+            );
+
+            if (!levelData) {
+                console.error('未找到对应的教育水平数据', { level, stage });
+                return;
+            }
+
+            // 设置标题
+            title.textContent = `${stage} - ${level}`;
+
+            // 设置内容
+            let content = '';
+            
+            // 核心特点
+            if (levelData.features) {
+                content += '<h5>核心特点</h5>';
+                // 处理markdown格式的加粗文本
+                const features = levelData.features
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\n/g, '<br>');
+                content += `<p>${features}</p>`;
+            }
+
+            // 国籍要求
+            if (levelData.nationalityRequirement) {
+                content += '<h5>国籍要求</h5>';
+                content += `<p>${levelData.nationalityRequirement}</p>`;
+            }
+
+            // 学籍情况
+            if (levelData.studentStatus) {
+                content += '<h5>学籍情况</h5>';
+                content += `<p>${levelData.studentStatus === '有' ? '有国内学籍' : '无国内学籍'}</p>`;
+            }
+
+            // 如果有额外的详细信息字段，也可以添加
+            if (levelData.details) {
+                content += '<h5>详细说明</h5>';
+                const details = levelData.details
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\n/g, '<br>');
+                content += `<p>${details}</p>`;
+            }
+
+            body.innerHTML = content;
+
+            // 显示弹窗
+            tooltip.style.display = 'flex';
+            setTimeout(() => {
+                tooltip.classList.add('show');
+            }, 10);
+
+            // 阻止页面滚动
+            document.body.style.overflow = 'hidden';
+
+        } catch (error) {
+            console.error('显示教育水平特征弹窗时出错:', error);
+        }
+    }
+
+    // 隐藏教育水平特征弹窗
+    hideLevelTooltip() {
+        try {
+            const tooltip = document.getElementById('levelTooltip');
+            if (tooltip) {
+                tooltip.classList.remove('show');
+                setTimeout(() => {
+                    tooltip.style.display = 'none';
+                }, 300);
+
+                // 恢复页面滚动
+                document.body.style.overflow = '';
+            }
+        } catch (error) {
+            console.error('隐藏教育水平特征弹窗时出错:', error);
         }
     }
 
