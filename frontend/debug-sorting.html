@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>排序调试</title>
+</head>
+<body>
+    <h1>排序调试</h1>
+    <div id="debug"></div>
+
+    <script src="js/match-score-calculator.js"></script>
+    <script src="js/path-clusterer.js"></script>
+    <script>
+        function debugSorting() {
+            const debug = document.getElementById('debug');
+            
+            try {
+                // 创建简单的测试数据
+                const testRoutes = [
+                    {
+                        id: 'domestic_direct',
+                        name: '国内直达路线',
+                        paths: [{ nodes: [{ stage: '小学', level: '公立' }] }],
+                        feasibilityScore: 1.0,
+                        pathCount: 1
+                    },
+                    {
+                        id: 'other_paths',
+                        name: '其他个性化路线',
+                        paths: [{ nodes: [{ stage: '小学', level: '公立' }] }],
+                        feasibilityScore: 0.8,
+                        pathCount: 1
+                    },
+                    {
+                        id: 'infeasible_paths',
+                        name: '不可行路径',
+                        paths: [],
+                        feasibilityScore: 0.0,
+                        pathCount: 0
+                    }
+                ];
+
+                const userInput = {
+                    currentStage: '小学',
+                    currentGrade: 1,
+                    currentLevel: '公立',
+                    targetStage: '大学'
+                };
+
+                console.log('测试数据:', testRoutes);
+                console.log('用户输入:', userInput);
+
+                const clusterer = new PathClustererService();
+                console.log('PathClustererService 创建成功');
+
+                const sortedRoutes = clusterer.clusterPaths(testRoutes, userInput);
+                console.log('排序结果:', sortedRoutes);
+
+                debug.innerHTML = `
+                    <h3>调试结果</h3>
+                    <p>原始路线数量: ${testRoutes.length}</p>
+                    <p>排序后路线数量: ${sortedRoutes.length}</p>
+                    <h4>排序结果:</h4>
+                    <ol>
+                        ${sortedRoutes.map((route, index) => 
+                            `<li>${index + 1}. ${route.name} (ID: ${route.id})</li>`
+                        ).join('')}
+                    </ol>
+                `;
+
+            } catch (error) {
+                console.error('调试错误:', error);
+                debug.innerHTML = `
+                    <h3>调试错误</h3>
+                    <p>错误信息: ${error.message}</p>
+                    <p>堆栈跟踪: ${error.stack}</p>
+                `;
+            }
+        }
+
+        window.addEventListener('load', debugSorting);
+    </script>
+</body>
+</html>

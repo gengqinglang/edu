@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>排序测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+        .error { background: #ffebee; border-color: #f44336; }
+        .success { background: #e8f5e8; border-color: #4caf50; }
+    </style>
+</head>
+<body>
+    <h1>战略路线排序测试</h1>
+    <div id="testResults"></div>
+
+    <script src="js/match-score-calculator.js"></script>
+    <script src="js/path-clusterer.js"></script>
+    <script>
+        function runTest() {
+            const results = document.getElementById('testResults');
+            
+            try {
+                // 创建测试数据
+                const testPaths = [
+                    {
+                        nodes: [
+                            { stage: '小学', level: '公立' },
+                            { stage: '初中', level: '公立' },
+                            { stage: '高中', level: '公立' },
+                            { stage: '大学', level: '国内公办' }
+                        ],
+                        feasibility: 'feasible',
+                        description: '国内直达路径'
+                    },
+                    {
+                        nodes: [
+                            { stage: '小学', level: '公立' },
+                            { stage: '初中', level: '民办双语' },
+                            { stage: '高中', level: '民办国际化学校' },
+                            { stage: '大学', level: '海外大学' }
+                        ],
+                        feasibility: 'feasible',
+                        description: '海外直通路径'
+                    }
+                ];
+
+                const userInput = {
+                    currentStage: '小学',
+                    currentGrade: 1,
+                    currentLevel: '公立',
+                    targetStage: '大学'
+                };
+
+                // 创建测试用的战略路线
+                const testRoutes = [
+                    {
+                        id: 'domestic_direct',
+                        name: '国内直达路线',
+                        description: '全程国内体系',
+                        paths: [testPaths[0]],
+                        feasibilityScore: 1.0,
+                        pathCount: 1,
+                        prevalence: 0.8,
+                        costRange: { min: 100000, max: 200000 },
+                        advantages: ['经济实惠'],
+                        disadvantages: ['竞争激烈'],
+                        features: ['traditional']
+                    },
+                    {
+                        id: 'overseas_direct',
+                        name: '海外直通路线',
+                        description: '早期国际体系',
+                        paths: [testPaths[1]],
+                        feasibilityScore: 1.0,
+                        pathCount: 1,
+                        prevalence: 0.3,
+                        costRange: { min: 500000, max: 1000000 },
+                        advantages: ['国际化'],
+                        disadvantages: ['费用高'],
+                        features: ['international']
+                    },
+                    {
+                        id: 'other_paths',
+                        name: '其他个性化路线',
+                        description: '非常见路径',
+                        paths: testPaths,
+                        feasibilityScore: 0.8,
+                        pathCount: 2,
+                        prevalence: 0.1,
+                        costRange: { min: 200000, max: 800000 },
+                        advantages: ['个性化'],
+                        disadvantages: ['风险高'],
+                        features: ['hybrid']
+                    },
+                    {
+                        id: 'infeasible_paths',
+                        name: '不可行路径',
+                        description: '当前不可行',
+                        paths: [],
+                        feasibilityScore: 0.0,
+                        pathCount: 0,
+                        prevalence: 0.0,
+                        costRange: { min: 0, max: 0 },
+                        advantages: ['参考价值'],
+                        disadvantages: ['不可行'],
+                        features: []
+                    }
+                ];
+
+                // 测试排序逻辑
+                const clusterer = new PathClustererService();
+                const sortedRoutes = clusterer.clusterPaths(testRoutes, userInput);
+
+                // 验证排序结果
+                let testPassed = true;
+                let errorMessage = '';
+
+                // 检查排序结果
+                if (sortedRoutes.length !== 4) {
+                    testPassed = false;
+                    errorMessage += `期望4个路线，实际得到${sortedRoutes.length}个。`;
+                }
+
+                // 检查其他个性化路线是否在倒数第二位
+                const otherPathsIndex = sortedRoutes.findIndex(route => route.id === 'other_paths');
+                if (otherPathsIndex !== 2) {
+                    testPassed = false;
+                    errorMessage += `其他个性化路线应该在索引2，实际在索引${otherPathsIndex}。`;
+                }
+
+                // 检查不可行路线是否在最后
+                const infeasibleIndex = sortedRoutes.findIndex(route => route.id === 'infeasible_paths');
+                if (infeasibleIndex !== 3) {
+                    testPassed = false;
+                    errorMessage += `不可行路线应该在索引3，实际在索引${infeasibleIndex}。`;
+                }
+
+                // 显示结果
+                if (testPassed) {
+                    results.innerHTML = `
+                        <div class="test-result success">
+                            <h3>✅ 测试通过</h3>
+                            <p>排序逻辑工作正常：</p>
+                            <ol>
+                                ${sortedRoutes.map((route, index) => 
+                                    `<li>${index + 1}. ${route.name} (ID: ${route.id})</li>`
+                                ).join('')}
+                            </ol>
+                        </div>
+                    `;
+                } else {
+                    results.innerHTML = `
+                        <div class="test-result error">
+                            <h3>❌ 测试失败</h3>
+                            <p>错误信息：${errorMessage}</p>
+                            <p>实际排序结果：</p>
+                            <ol>
+                                ${sortedRoutes.map((route, index) => 
+                                    `<li>${index + 1}. ${route.name} (ID: ${route.id})</li>`
+                                ).join('')}
+                            </ol>
+                        </div>
+                    `;
+                }
+
+            } catch (error) {
+                results.innerHTML = `
+                    <div class="test-result error">
+                        <h3>❌ 测试出错</h3>
+                        <p>错误信息：${error.message}</p>
+                        <p>堆栈跟踪：${error.stack}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 页面加载后运行测试
+        window.addEventListener('load', runTest);
+    </script>
+</body>
+</html>

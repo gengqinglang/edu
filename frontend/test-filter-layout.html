@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>筛选器布局测试</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .breakpoint-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #333;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="breakpoint-info" id="breakpointInfo">
+        宽度: <span id="widthDisplay">0</span>px | 
+        布局: <span id="layoutMode">桌面端</span>
+    </div>
+    
+    <div class="test-header">
+        <h1>筛选器紧凑布局测试</h1>
+        <p>请调整浏览器宽度测试布局稳定性</p>
+        <p><strong>新布局</strong>: 标签与内容同行显示 | <strong>桌面端</strong> (>1024px): 完整布局 | <strong>平板端</strong> (769-1024px): 紧凑布局 | <strong>移动端</strong> (≤768px): 垂直布局</p>
+    </div>
+
+    <!-- 复制筛选器HTML结构 -->
+    <div class="path-filters-container">
+        <div class="filters-section">
+            <div class="filters-header">
+                <h4>筛选与排序</h4>
+                <span class="reset-filters-icon" title="重置所有筛选条件">🔄</span>
+            </div>
+            
+            <div class="filters-grid">
+                <!-- 教育阶段筛选 -->
+                <div class="filter-group">
+                    <label class="filter-label">锁定关键阶段：</label>
+                    <div class="stage-dropdown-container">
+                        <select class="stage-select">
+                            <option value="">选择教育阶段</option>
+                            <option value="小学">小学</option>
+                            <option value="初中">初中</option>
+                            <option value="高中">高中</option>
+                            <option value="大学">大学</option>
+                        </select>
+                        <select class="level-select">
+                            <option value="">选择具体类型</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- 排序选择 -->
+                <div class="filter-group">
+                    <label class="filter-label">排序方式：</label>
+                    <div class="sort-buttons">
+                        <button type="button" class="sort-btn active">
+                            <span class="sort-icon">📊</span>
+                            <span class="sort-text">按常见度排序</span>
+                        </button>
+                        <button type="button" class="sort-btn">
+                            <span class="sort-icon">💰</span>
+                            <span class="sort-text">按总费用排序</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 费用区间筛选 -->
+            <div class="cost-range-section">
+                <label class="filter-label">总费用区间：</label>
+                <div class="cost-range-filter">
+                    <input type="range" class="cost-range-input" min="0" max="1000000" step="10000" value="0">
+                    <input type="range" class="cost-range-input" min="0" max="1000000" step="10000" value="1000000">
+                    <div class="cost-range-display">
+                        <span>0</span> - <span>1,000,000</span> 元
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateBreakpointInfo() {
+            const width = window.innerWidth;
+            const widthDisplay = document.getElementById('widthDisplay');
+            const layoutMode = document.getElementById('layoutMode');
+            
+            widthDisplay.textContent = width;
+            
+            if (width <= 768) {
+                layoutMode.textContent = '移动端 (单列)';
+                layoutMode.style.color = '#ff6b6b';
+            } else if (width <= 1024) {
+                layoutMode.textContent = '平板端 (两列)';
+                layoutMode.style.color = '#4ecdc4';
+            } else {
+                layoutMode.textContent = '桌面端 (三列)';
+                layoutMode.style.color = '#45b7d1';
+            }
+        }
+        
+        // 初始化和监听窗口大小变化
+        updateBreakpointInfo();
+        window.addEventListener('resize', updateBreakpointInfo);
+    </script>
+</body>
+</html>

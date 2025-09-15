@@ -126,6 +126,14 @@ class EducationPathApp {
             });
         }
 
+        // 重新规划按钮
+        const resetPlanBtn = document.getElementById('resetPlanBtn');
+        if (resetPlanBtn) {
+            resetPlanBtn.addEventListener('click', () => {
+                this.showFormSection();
+            });
+        }
+
         // 路径筛选选项
         if (this.showRarePathsCheckbox) {
             this.showRarePathsCheckbox.addEventListener('change', () => {
@@ -420,8 +428,8 @@ class EducationPathApp {
         // 显示结果区域
         this.resultsSection.style.display = 'block';
         
-        // 滚动到结果区域
-        this.resultsSection.scrollIntoView({ behavior: 'smooth' });
+        // 显示计算进度提示
+        this.showCalculationProgress();
         
         // 显示统计信息
         this.displayStats(result);
@@ -429,6 +437,9 @@ class EducationPathApp {
         // 显示路径列表（默认显示可行路径）
         const feasiblePaths = this.getFilteredPaths();
         this.displayPaths(feasiblePaths);
+        
+        // 开始倒计时，确保内容完全渲染后滚动
+        this.startCalculationCountdown();
     }
 
     /**
@@ -461,6 +472,9 @@ class EducationPathApp {
             this.displayNoResults();
             return;
         }
+        
+        // 设置基准路径为第一个路径，用于差异对比
+        this.baselinePath = paths.length > 0 ? paths[0] : null;
         
         const pathsHTML = paths.map((path, index) => {
             return this.generatePathCard(path, index);
@@ -505,108 +519,75 @@ class EducationPathApp {
             const isDifferent = this.isStepDifferent(step, stepIndex);
             const stepClass = isDifferent ? 'path-step-different' : '';
             
-            // 获取目标节点的费用信息
+            // 获取目标节点的费用信息（仅用于右上角显示）
             const targetCost = this.costCalculator.getStageCost(step.to.stage, step.to.level);
-            const costInfo = targetCost ? `
-                <div class="step-cost">
-                    <div class="step-cost-header">
-                        <span class="step-cost-label">目标阶段费用：</span>
-                        <span class="step-cost-amount">¥${this.costCalculator.formatCost(targetCost.costTotal)}</span>
-                    </div>
-                    <div class="step-cost-details">
-                        <div class="step-cost-breakdown">
-                            <span class="step-cost-duration">${targetCost.duration}年</span>
-                            <span class="step-cost-yearly">年均：¥${this.costCalculator.formatCost(targetCost.costTotal / targetCost.duration)}</span>
-                        </div>
-                        <div class="step-cost-source">数据来源：${targetCost.source}</div>
-                    </div>
-                </div>
-            ` : '';
             
             return `
                 <div class="path-step ${stepClass}">
                     <div class="step-header">
-                        <span class="step-number">步骤${stepIndex + 1}</span>
-                        <span class="step-stage">${step.to.stage}</span>
+                        <span class="step-stage-level">${step.to.stage}-${step.to.level}</span>
+                        <span class="step-total-cost">${targetCost ? `¥${this.costCalculator.formatCost(targetCost.costTotal)}` : '费用待定'}</span>
                     </div>
                     <div class="step-content">
-                        <div class="step-level">${step.to.level}</div>
+                        ${targetCost ? `
+                            <div class="step-duration-cost">
+                                <span class="step-duration">持续${targetCost.duration}年</span>
+                                <span class="step-yearly-cost">年均：¥${this.costCalculator.formatCost(targetCost.yearlyTotal)}</span>
+                            </div>
+                        ` : ''}
                         ${this.generateEducationLevelFeatures(step.to.stage, step.to.level)}
-                        ${costInfo}
-                        ${step.conditions ? `<div class="step-conditions">条件：${step.conditions}</div>` : ''}
                     </div>
+                    ${step.conditions ? `<div class="step-conditions">请注意约束条件："${step.conditions}"</div>` : ''}
                 </div>
             `;
         }).join('');
         
         // 计算关键数据
         const totalCost = pathCost ? pathCost.total : 0;
-        const transitionCount = this.pathFilter.getPathTransitionCount(path);
         const prevalence = path.prevalence || 0;
         
-        // 判断是否默认展开（第一个路径默认展开）
-        const isExpanded = index === 0;
+        // 判断是否默认展开（所有路径默认收起）
+        const isExpanded = false;
         const expandedClass = isExpanded ? 'expanded' : 'collapsed';
         
         return `
             <div class="path-card ${expandedClass}" data-path-index="${index}">
                 <div class="path-header clickable" data-toggle-path="${index}">
-                    <div class="path-title-section">
-                        <h4>路径 ${index + 1}</h4>
-                        <div class="path-description">${path.description || '教育路径'}</div>
-                    </div>
-                    <div class="path-summary">
-                        <div class="path-summary-item">
-                            <span class="summary-label">总费用：</span>
-                            <span class="summary-value">¥${this.costCalculator.formatCost(totalCost)}</span>
+                    <div class="path-info">
+                        <div class="path-first-row">
+                            <span class="path-title">路径 ${index + 1}</span>
+                            <span class="path-cost">
+                                <span class="cost-label">总费用</span>
+                                <span class="cost-value">¥${this.costCalculator.formatCost(totalCost)}</span>
+                            </span>
                         </div>
-                    </div>
-                    <div class="path-toggle-icon">
-                        <span class="toggle-arrow">▼</span>
+                        <div class="path-second-row">
+                            <span class="path-description">${this.generatePathDescriptionWithDifferences(path, index)}</span>
+                            <div class="path-toggle-icon">
+                                <span class="toggle-arrow">▼</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="path-content">
                     <div class="path-steps">
                         ${currentStageCost && currentStageCost.remainingYears > 0 ? `
-                            <!-- 当前阶段剩余费用卡片 -->
+                            <!-- 当前阶段步骤卡片 -->
                             <div class="path-step current-stage-step">
                                 <div class="step-header">
-                                    <div class="step-title">
-                                        当前阶段剩余费用
-                                        <span class="step-description-inline">${currentStage}-${currentLevel}</span>
-                                    </div>
-                                    <div class="step-feasibility feasible">
-                                        可行
-                                    </div>
+                                    <span class="step-stage-level">${currentStage}-${currentLevel}</span>
+                                    <span class="step-total-cost">¥${this.costCalculator.formatCost(currentStageCost.total)}</span>
                                 </div>
-                                <div class="step-transition">
-                                    <span class="step-from">当前：${currentStage}-${currentLevel}</span>
-                                    <span class="step-arrow">→</span>
-                                    <span class="step-to">完成：${currentStage}-${currentLevel}</span>
-                                </div>
-                                <div class="step-cost">
-                                    <div class="step-cost-header">
-                                        <span class="step-cost-label">剩余阶段费用：</span>
-                                        <span class="step-cost-amount">¥${this.costCalculator.formatCost(currentStageCost.total)}</span>
+                                <div class="step-content">
+                                    <div class="step-duration-cost">
+                                        <span class="step-duration">持续${currentStageCost.remainingYears}年</span>
+                                        <span class="step-yearly-cost">年均：¥${this.costCalculator.formatCost(currentStageCost.yearlyCost)}</span>
                                     </div>
-                                    <div class="step-cost-details">
-                                        <div class="step-cost-breakdown">
-                                            <span class="step-cost-duration">剩余${currentStageCost.remainingYears}年</span>
-                                            <span class="step-cost-yearly">年均：¥${this.costCalculator.formatCost(currentStageCost.yearlyCost)}</span>
-                                        </div>
-                                        <div class="step-cost-source">数据来源：${currentStageCost.source}</div>
-                                    </div>
+                                    ${this.generateEducationLevelFeatures(currentStage, currentLevel)}
                                 </div>
-                                ${this.generateEducationLevelFeatures(currentStage, currentLevel)}
                             </div>
                         ` : ''}
                         ${steps}
-                    </div>
-                    <div class="path-key-data">
-                        <div class="path-key-data-item">
-                            <span>总费用：</span>
-                            <span class="path-key-data-value">¥${this.costCalculator.formatCost(totalCost)}</span>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -660,7 +641,14 @@ class EducationPathApp {
      * 根据当前筛选条件获取路径
      */
     getFilteredPaths() {
-        return this.allPaths.filter(path => path.feasibility === this.currentFilter);
+        // 使用rankedPaths而不是allPaths，确保数据一致性
+        const paths = this.rankedPaths.length > 0 ? this.rankedPaths : this.allPaths;
+        
+        if (this.currentFilter === 'all') {
+            return paths;
+        }
+        
+        return paths.filter(path => path.feasibility === this.currentFilter);
     }
 
     /**
@@ -741,47 +729,26 @@ class EducationPathApp {
      * 显示教育方向
      */
     displayStrategicRoutes() {
-        // 隐藏基本信息录入区域
+        // 保持基本信息录入区域显示，不隐藏
         const inputSection = document.querySelector('.input-section');
-        if (inputSection) {
-            inputSection.style.display = 'none';
-        }
+        // inputSection 保持显示状态
         
-        // 移除已存在的按钮（避免重复）
+        // 移除已存在的重新规划按钮（因为不再需要）
         const existingBtn = document.getElementById('backToFormBtn');
         if (existingBtn) {
             existingBtn.remove();
         }
         
-        // 在结果区域前添加重新规划按钮
-        const backToFormBtn = document.createElement('button');
-        backToFormBtn.className = 'btn btn-secondary';
-        backToFormBtn.id = 'backToFormBtn';
-        backToFormBtn.style.cssText = `
-            position: absolute;
-            top: -60px;
-            left: 0;
-            z-index: 10;
-            margin-bottom: 1rem;
-        `;
-        backToFormBtn.innerHTML = '<span>← 重新规划</span>';
-        
-        // 设置结果区域相对定位以便按钮绝对定位
-        this.resultsSection.style.position = 'relative';
-        this.resultsSection.style.marginTop = '60px';
-        
-        // 添加按钮到结果区域
-        this.resultsSection.appendChild(backToFormBtn);
-        
-        // 绑定按钮事件
-        backToFormBtn.addEventListener('click', () => {
-            this.showFormSection();
-        });
-        
         // 显示结果区域
         this.resultsSection.style.display = 'block';
         this.strategicRoutesContainer.style.display = 'block';
         this.pathDetailsContainer.style.display = 'none';
+        
+        // 显示重新规划按钮
+        const resetPlanBtn = document.getElementById('resetPlanBtn');
+        if (resetPlanBtn) {
+            resetPlanBtn.style.display = 'inline-block';
+        }
         
         // 滚动到结果区域顶部
         this.resultsSection.scrollIntoView({ 
@@ -975,10 +942,14 @@ class EducationPathApp {
         
         this.currentStrategicRoute = route;
         
+        // 获取方向编号（排除不可行路线）
+        const feasibleRoutes = this.strategicRoutes.filter(r => r.id !== 'infeasible_paths');
+        const directionNumber = feasibleRoutes.findIndex(r => r.id === routeId) + 1;
+        
         // 更新UI
         this.strategicRoutesContainer.style.display = 'none';
         this.pathDetailsContainer.style.display = 'block';
-        this.pathDetailsTitle.textContent = `${route.name} - 具体路径`;
+        this.pathDetailsTitle.textContent = `方向${directionNumber}：${route.name} - 具体路径`;
         
         // 直接使用教育方向中的路径，不进行匹配
         const routePaths = route.paths;
@@ -998,7 +969,23 @@ class EducationPathApp {
         this.initializeFilters(sortedRoutePaths);
         
         // 显示路径
+        console.log('About to call displayFilteredPaths, filteredPaths length:', this.filteredPaths.length);
         this.displayFilteredPaths();
+        
+        // 临时调试：强制显示路径数据
+        console.log('sortedRoutePaths:', sortedRoutePaths);
+        console.log('rankedPaths:', this.rankedPaths);
+        console.log('filteredPaths:', this.filteredPaths);
+        
+        // 强制修复：如果filteredPaths为空，直接显示所有路径
+        if (this.filteredPaths.length === 0 && sortedRoutePaths.length > 0) {
+            console.log('Force fix: directly displaying all paths');
+            this.filteredPaths = [...sortedRoutePaths];
+            this.displayPaths(this.filteredPaths);
+        }
+        
+        // 滚动到路径详情区域
+        this.scrollToPathDetailsContainer();
     }
 
     /**
@@ -1014,30 +1001,34 @@ class EducationPathApp {
      * 显示表单区域（重新规划）
      */
     showFormSection() {
-        // 显示基本信息录入区域
-        const inputSection = document.querySelector('.input-section');
-        if (inputSection) {
-            inputSection.style.display = 'block';
-        }
+        console.log('showFormSection 被调用');
         
-        // 移除重新规划按钮
+        // 基本信息区域保持显示，不需要操作
+        
+        // 移除重新规划按钮（如果存在）
         const backToFormBtn = document.getElementById('backToFormBtn');
         if (backToFormBtn) {
+            console.log('找到并移除重新规划按钮');
             backToFormBtn.remove();
         }
-        
-        // 重置结果区域样式
-        this.resultsSection.style.position = '';
-        this.resultsSection.style.marginTop = '';
         
         // 隐藏结果区域
         this.resultsSection.style.display = 'none';
         
-        // 滚动到页面顶部
-        window.scrollTo({ 
-            top: 0, 
-            behavior: 'smooth' 
-        });
+        // 隐藏重新规划按钮
+        const resetPlanBtn = document.getElementById('resetPlanBtn');
+        if (resetPlanBtn) {
+            resetPlanBtn.style.display = 'none';
+        }
+        
+        // 滚动到基本信息区域
+        const inputSection = document.querySelector('.input-section');
+        if (inputSection) {
+            inputSection.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
         
         // 重置加载状态
         this.setLoadingState(false);
@@ -1089,7 +1080,6 @@ class EducationPathApp {
                 <ul>
                     <li><strong>路径1</strong>：幼儿园(公立) → 小学(民办双语) → 初中(民办双语) → 高中(民办国际化学校) → 大学(海外大学)</li>
                     <li><strong>路径2</strong>：幼儿园(公立) → 小学(公立) → 初中(民办双语) → 高中(民办国际化学校) → 大学(海外大学)</li>
-                    <li><strong>路径3</strong>：幼儿园(公立) → 小学(公立) → 初中(公立) → 高中(海外高中) → 大学(海外大学)</li>
                 </ul>
                 
                 <p>早期国际转轨路径的特点是在小学或初中阶段就转入国际教育体系，让孩子尽早适应国际化学习环境。每条路径都会详细显示：</p>
@@ -1228,7 +1218,7 @@ class EducationPathApp {
         const userInfo = this.getUserInfo();
         
         // 计算统计数据
-        const totalRoutes = feasibleRoutes.length + infeasibleRoutes.length;
+        const totalFeasibleRoutes = feasibleRoutes.length; // 只计算可行路线
         const totalPaths = this.strategicRoutes.reduce((sum, route) => sum + (route.paths ? route.paths.length : 0), 0);
         
         return `
@@ -1240,7 +1230,7 @@ class EducationPathApp {
                 <div class="key-metrics">
                     <div class="metric">
                         <span class="metric-label">可行的教育方向</span>
-                        <strong class="metric-value">${totalRoutes}</strong>
+                        <strong class="metric-value">${totalFeasibleRoutes}</strong>
                         <span class="metric-unit">个</span>
                         <div class="help-question" data-tooltip="教育方向说明">什么是教育方向？</div>
                     </div>
@@ -1312,21 +1302,23 @@ class EducationPathApp {
      * @returns {string} 教育水平特点HTML
      */
     generateEducationLevelFeatures(stage, level) {
-        const featureInfo = this.educationLevelFeatures.getFullFeatureInfo(stage, level);
-        
-        if (!featureInfo.hasInfo) {
-            return '';
-        }
+        try {
+            console.log('generateEducationLevelFeatures called for:', stage, level);
+            const featureInfo = this.educationLevelFeatures.getFullFeatureInfo(stage, level);
+            console.log('featureInfo:', featureInfo);
+            
+            if (!featureInfo.hasInfo) {
+                return '';
+            }
 
-        const formattedFeatures = this.educationLevelFeatures.formatFeatureText(featureInfo.features);
+            const formattedFeatures = this.educationLevelFeatures.formatFeatureText(featureInfo.features);
         const uniqueId = `features-${stage}-${level}-${Math.random().toString(36).substr(2, 9)}`;
         
         return `
             <div class="education-level-features">
                 <div class="features-header">
                     <div class="features-title">
-                        <span class="features-icon">📚</span>
-                        <span class="features-label">${stage}-${level} 核心特点</span>
+                        <span class="features-label">核心特点</span>
                     </div>
                     <button type="button" class="features-toggle" onclick="toggleFeatures('${uniqueId}')">
                         <span class="toggle-icon">▼</span>
@@ -1351,6 +1343,10 @@ class EducationPathApp {
                 </div>
             </div>
         `;
+        } catch (error) {
+            console.error('Error in generateEducationLevelFeatures:', error);
+            return '';
+        }
     }
 
     /**
@@ -1371,6 +1367,9 @@ class EducationPathApp {
         
         // 绑定筛选器事件
         this.bindFilterEvents();
+        
+        // 初始化展开收起功能
+        this.initializeFiltersToggle();
         
         // 设置默认排序按钮状态
         const defaultSortBtn = document.querySelector('.sort-btn[data-sort="prevalence"]');
@@ -1403,7 +1402,7 @@ class EducationPathApp {
             stageSelect.appendChild(option);
         });
 
-        // 阶段选择变化时更新水平选择器
+        // 阶段选择变化时更新水平选择器并触发筛选
         stageSelect.addEventListener('change', (e) => {
             const selectedStage = e.target.value;
             
@@ -1424,6 +1423,9 @@ class EducationPathApp {
                 levelSelect.innerHTML = '<option value="">选择教育水平</option>';
                 levelSelect.disabled = true;
             }
+            
+            // 触发筛选更新
+            this.debouncedApplyFilters();
         });
     }
 
@@ -1458,13 +1460,14 @@ class EducationPathApp {
      * 绑定筛选器事件
      */
     bindFilterEvents() {
-        // 教育阶段筛选器
-        const stageSelects = document.querySelectorAll('.stage-level-select');
-        stageSelects.forEach(select => {
-            select.addEventListener('change', () => {
+        // 教育水平筛选器（阶段筛选器已在initializeEducationStageFilters中处理）
+        const levelSelect = document.getElementById('levelSelect');
+        
+        if (levelSelect) {
+            levelSelect.addEventListener('change', () => {
                 this.debouncedApplyFilters();
             });
-        });
+        }
         
         // 费用区间筛选器
         const costInputs = document.querySelectorAll('.cost-range-input');
@@ -1475,13 +1478,6 @@ class EducationPathApp {
             });
         });
         
-        // 特征标签筛选器
-        const featureTags = document.querySelectorAll('.feature-tag');
-        featureTags.forEach(tag => {
-            tag.addEventListener('change', () => {
-                this.debouncedApplyFilters();
-            });
-        });
         
         // 排序选择器
         const sortSelect = document.getElementById('sortSelect');
@@ -1557,7 +1553,6 @@ class EducationPathApp {
     applyFilters() {
         const filterState = this.collectFilterState();
         const filteredPaths = this.pathFilter.applyFilters(this.rankedPaths, filterState);
-        
         this.filteredPaths = filteredPaths;
         this.displayFilteredPaths();
     }
@@ -1569,7 +1564,6 @@ class EducationPathApp {
         const filterState = {
             educationStages: {},
             costRange: { min: 0, max: 0 },
-            features: [],
             sortBy: 'prevalence'
         };
         
@@ -1591,11 +1585,6 @@ class EducationPathApp {
             filterState.costRange.max = parseInt(maxInput.value);
         }
         
-        // 收集特征筛选
-        const featureTags = document.querySelectorAll('.feature-tag:checked');
-        featureTags.forEach(tag => {
-            filterState.features.push(tag.dataset.feature);
-        });
         
         // 收集排序方式
         const activeSortBtn = document.querySelector('.sort-btn.active');
@@ -1633,11 +1622,6 @@ class EducationPathApp {
             this.updateCostRangeDisplay();
         }
         
-        // 重置特征筛选器
-        const featureTags = document.querySelectorAll('.feature-tag');
-        featureTags.forEach(tag => {
-            tag.checked = false;
-        });
         
         // 重置排序按钮
         const sortBtns = document.querySelectorAll('.sort-btn');
@@ -1658,14 +1642,17 @@ class EducationPathApp {
      * 显示筛选后的路径
      */
     displayFilteredPaths() {
+        console.log('displayFilteredPaths called with filteredPaths length:', this.filteredPaths.length);
         const countElement = document.getElementById('filteredPathsCount');
         if (countElement) {
             countElement.textContent = this.filteredPaths.length;
         }
         
         if (this.filteredPaths.length === 0) {
+            console.log('No filtered paths, displaying no results');
             this.displayNoResults();
         } else {
+            console.log('Calling displayPaths with', this.filteredPaths.length, 'filtered paths');
             this.displayPaths(this.filteredPaths);
         }
     }
@@ -1700,6 +1687,267 @@ class EducationPathApp {
         }
         
         return step.level !== commonStep.level;
+    }
+
+    /**
+     * 生成带差异标记的路径描述
+     * @param {Object} path - 当前路径对象
+     * @param {number} pathIndex - 路径索引
+     * @returns {string} - 带HTML标记的路径描述
+     */
+    generatePathDescriptionWithDifferences(path, pathIndex) {
+        // 第一个路径作为基准，不显示差异
+        if (pathIndex === 0 || !this.baselinePath) {
+            return path.description || '教育路径';
+        }
+        
+        // 获取基准路径和当前路径的节点
+        const baselineNodes = this.baselinePath.nodes || [];
+        const currentNodes = path.nodes || [];
+        
+        // 生成路径描述数组
+        const pathSegments = [];
+        
+        // 遍历当前路径的每个节点
+        currentNodes.forEach((node, index) => {
+            const nodeDescription = `${node.stage}-${node.level}`;
+            
+            // 检查是否与基准路径的对应节点不同
+            const isDifferent = this.isNodeDifferent(node, index, baselineNodes);
+            
+            if (isDifferent) {
+                pathSegments.push(`<span class="path-difference">${nodeDescription}</span>`);
+            } else {
+                pathSegments.push(nodeDescription);
+            }
+        });
+        
+        return pathSegments.join(' → ');
+    }
+
+    /**
+     * 检查节点是否与基准路径不同
+     * @param {Object} node - 当前节点
+     * @param {number} nodeIndex - 节点索引
+     * @param {Array} baselineNodes - 基准路径节点数组
+     * @returns {boolean} - 是否不同
+     */
+    isNodeDifferent(node, nodeIndex, baselineNodes) {
+        // 如果基准路径不存在对应位置的节点，认为不同
+        if (!baselineNodes || nodeIndex >= baselineNodes.length) {
+            return true;
+        }
+        
+        const baselineNode = baselineNodes[nodeIndex];
+        
+        // 比较节点的 stage 和 level
+        return node.stage !== baselineNode.stage || node.level !== baselineNode.level;
+    }
+
+    /**
+     * 初始化筛选器展开收起功能
+     */
+    initializeFiltersToggle() {
+        const toggleBtn = document.getElementById('toggleFiltersBtn');
+        const filtersHeader = document.getElementById('filtersHeader');
+        const filtersContent = document.getElementById('filtersContent');
+        
+        if (!toggleBtn || !filtersHeader || !filtersContent) return;
+        
+        // 设置默认收起状态
+        filtersContent.classList.add('collapsed');
+        filtersContent.style.display = 'none';
+        filtersHeader.classList.remove('expanded');
+        
+        // 移除旧的事件监听器（如果存在）
+        filtersHeader.removeEventListener('click', this.filtersToggleHandler);
+        
+        // 创建事件处理函数并保存引用
+        this.filtersToggleHandler = () => {
+            const isExpanded = filtersHeader.classList.contains('expanded');
+            
+            if (isExpanded) {
+                // 收起
+                filtersContent.classList.remove('expanded');
+                filtersContent.classList.add('collapsed');
+                filtersHeader.classList.remove('expanded');
+                toggleBtn.textContent = '▶';
+                
+                // 使用动画收起
+                setTimeout(() => {
+                    filtersContent.style.display = 'none';
+                }, 300);
+            } else {
+                // 展开
+                filtersContent.style.display = 'block';
+                filtersContent.classList.remove('collapsed');
+                filtersContent.classList.add('expanded');
+                filtersHeader.classList.add('expanded');
+                toggleBtn.textContent = '▼';
+            }
+        };
+        
+        // 绑定到标题区域和图标
+        filtersHeader.addEventListener('click', this.filtersToggleHandler);
+    }
+
+    /**
+     * 滚动到路径详情容器
+     */
+    scrollToPathDetailsContainer() {
+        // 等待DOM更新完成
+        setTimeout(() => {
+            const pathDetailsContainer = document.getElementById('pathDetailsContainer');
+            if (pathDetailsContainer) {
+                // 使用平滑滚动到路径详情容器顶部，包含返回按钮、标题等完整区域
+                pathDetailsContainer.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                    inline: 'nearest'
+                });
+            }
+        }, 100); // 短暂延迟确保内容已渲染
+    }
+
+    /**
+     * 显示计算进度提示
+     */
+    showCalculationProgress() {
+        // 创建计算进度遮罩
+        const progressOverlay = document.createElement('div');
+        progressOverlay.id = 'calculationProgress';
+        progressOverlay.innerHTML = `
+            <div class="calculation-overlay">
+                <div class="calculation-content">
+                    <div class="calculation-spinner"></div>
+                    <div class="calculation-text">正在计算教育路径方案...</div>
+                    <div class="calculation-countdown">
+                        <span id="countdownNumber">3</span>秒后展示结果
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // 添加样式
+        progressOverlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        `;
+        
+        document.body.appendChild(progressOverlay);
+        
+        // 添加CSS动画样式
+        const style = document.createElement('style');
+        style.textContent = `
+            .calculation-overlay {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+            }
+            .calculation-content {
+                text-align: center;
+                background: white;
+                padding: 2rem;
+                border-radius: 16px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+                border: 1px solid #e5e7eb;
+            }
+            .calculation-spinner {
+                width: 40px;
+                height: 40px;
+                border: 3px solid #f3f4f6;
+                border-top: 3px solid #01BCD6;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin: 0 auto 1rem;
+            }
+            .calculation-text {
+                font-size: 1.1rem;
+                color: #374151;
+                margin-bottom: 0.5rem;
+                font-weight: 500;
+            }
+            .calculation-countdown {
+                font-size: 0.9rem;
+                color: #6b7280;
+            }
+            #countdownNumber {
+                font-weight: bold;
+                color: #01BCD6;
+                font-size: 1.2rem;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    /**
+     * 开始计算倒计时
+     */
+    startCalculationCountdown() {
+        let countdown = 3;
+        const countdownElement = document.getElementById('countdownNumber');
+        
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            if (countdownElement) {
+                countdownElement.textContent = countdown;
+            }
+            
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                // 移除进度提示
+                this.hideCalculationProgress();
+                // 执行滚动
+                this.scrollToResultsSection();
+            }
+        }, 1000);
+    }
+
+    /**
+     * 隐藏计算进度提示
+     */
+    hideCalculationProgress() {
+        const progressOverlay = document.getElementById('calculationProgress');
+        if (progressOverlay) {
+            progressOverlay.style.opacity = '0';
+            progressOverlay.style.transform = 'scale(0.95)';
+            progressOverlay.style.transition = 'all 0.3s ease-out';
+            
+            setTimeout(() => {
+                progressOverlay.remove();
+            }, 300);
+        }
+    }
+
+    /**
+     * 滚动到结果区域
+     */
+    scrollToResultsSection() {
+        // 使用多重检查确保滚动到正确位置
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                this.resultsSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start',
+                    inline: 'nearest'
+                });
+            });
+        });
     }
 }
 

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>路径筛选功能测试</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .test-info {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #1976d2;
+        }
+        .test-info h3 {
+            margin: 0 0 10px 0;
+            color: #1976d2;
+        }
+        .test-info ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .test-info li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <h1 class="title">路径筛选功能测试</h1>
+            <p class="subtitle">测试统计卡片的点击筛选功能</p>
+        </header>
+
+        <!-- 测试说明 -->
+        <div class="test-info">
+            <h3>测试说明</h3>
+            <p>此页面用于测试路径筛选功能，请按照以下步骤进行测试：</p>
+            <ul>
+                <li><strong>步骤1:</strong> 填写表单并提交，查看路径分析结果</li>
+                <li><strong>步骤2:</strong> 验证页面加载时"可行路径"卡片默认被选中</li>
+                <li><strong>步骤3:</strong> 点击"可行路径"卡片，应该只显示可行性为"可行"的路径</li>
+                <li><strong>步骤4:</strong> 点击"不可行路径"卡片，应该只显示可行性为"不可行"的路径</li>
+                <li><strong>步骤5:</strong> 观察卡片的视觉反馈（悬停效果、激活状态）</li>
+            </ul>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <!-- 输入表单 -->
+            <section class="input-section">
+                <div class="form-container">
+                    <h2 class="section-title">基本信息</h2>
+                    
+                    <form id="educationForm" class="education-form">
+                        <!-- 当前教育阶段 -->
+                        <div class="form-group">
+                            <label for="currentStage" class="form-label">当前教育阶段</label>
+                            <select id="currentStage" name="currentStage" class="form-select" required>
+                                <option value="">请选择当前教育阶段</option>
+                                <option value="幼儿园">幼儿园</option>
+                                <option value="小学">小学</option>
+                                <option value="初中">初中</option>
+                                <option value="高中">高中</option>
+                                <option value="大学">大学</option>
+                                <option value="研究生">研究生</option>
+                                <option value="博士">博士</option>
+                            </select>
+                        </div>
+
+                        <!-- 当前年级 -->
+                        <div class="form-group">
+                            <label for="currentGrade" class="form-label">当前年级</label>
+                            <input type="number" id="currentGrade" name="currentGrade" class="form-input" 
+                                   min="1" max="12" placeholder="请输入年级（1-12）" required>
+                        </div>
+
+                        <!-- 当前教育水平 -->
+                        <div class="form-group">
+                            <label for="currentLevel" class="form-label">当前教育水平</label>
+                            <select id="currentLevel" name="currentLevel" class="form-select" required disabled>
+                                <option value="">请先选择教育阶段</option>
+                            </select>
+                        </div>
+
+                        <!-- 目标阶段 -->
+                        <div class="form-group">
+                            <label for="targetStage" class="form-label">目标教育阶段</label>
+                            <select id="targetStage" name="targetStage" class="form-select" required disabled>
+                                <option value="">请先选择当前教育阶段</option>
+                            </select>
+                        </div>
+
+                        <!-- 提交按钮 -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" disabled>
+                                <span class="btn-text">开始规划</span>
+                                <span class="btn-loading" style="display: none;">分析中...</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- 结果展示区域 -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-container">
+                    <h2 class="section-title">路径分析结果</h2>
+                    
+                    <!-- 统计信息 -->
+                    <div class="stats-container" id="statsContainer">
+                        <!-- 统计信息将通过JavaScript动态生成 -->
+                    </div>
+
+                    <!-- 路径列表 -->
+                    <div class="paths-container" id="pathsContainer">
+                        <!-- 路径列表将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>&copy; 2024 教育路径规划系统. 路径筛选功能测试页面.</p>
+        </footer>
+    </div>
+
+    <!-- 加载脚本 -->
+    <script src="js/education-data.js"></script>
+    <script src="js/path-finder.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

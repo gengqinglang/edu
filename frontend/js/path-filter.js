@@ -7,8 +7,7 @@ class PathFilterService {
         this.filterState = {
             educationStages: {}, // { stage: [levels] }
             costRange: { min: 0, max: 0 },
-            features: [], // ['免高考', '费用最低', '无转轨', '最常见']
-            sortBy: 'prevalence' // 'prevalence', 'cost', 'transitions'
+            sortBy: 'prevalence' // 'prevalence', 'cost'
         };
         
         this.debounceTimer = null;
@@ -65,80 +64,9 @@ class PathFilterService {
         return path.costBreakdown.total || 0;
     }
 
-    /**
-     * 计算路径的转轨次数
-     * @param {Object} path - 路径对象
-     * @returns {number} 转轨次数
-     */
-    getPathTransitionCount(path) {
-        if (!path || !path.nodes || !Array.isArray(path.nodes)) {
-            return 0;
-        }
-        
-        let transitionCount = 0;
-        for (let i = 1; i < path.nodes.length; i++) {
-            const prevNode = path.nodes[i - 1];
-            const currentNode = path.nodes[i];
-            
-            // 检查是否发生了转轨（从国内体系转到国际体系或反之）
-            if (this.isTransition(prevNode, currentNode)) {
-                transitionCount++;
-            }
-        }
-        
-        return transitionCount;
-    }
 
-    /**
-     * 判断两个节点之间是否发生转轨
-     * @param {Object} prevNode - 前一个节点
-     * @param {Object} currentNode - 当前节点
-     * @returns {boolean} 是否发生转轨
-     */
-    isTransition(prevNode, currentNode) {
-        if (!prevNode || !currentNode) {
-            return false;
-        }
-        
-        const prevIsInternational = this.isInternationalLevel(prevNode.stage, prevNode.level);
-        const currentIsInternational = this.isInternationalLevel(currentNode.stage, currentNode.level);
-        
-        return prevIsInternational !== currentIsInternational;
-    }
 
-    /**
-     * 判断教育水平是否为国际体系
-     * @param {string} stage - 教育阶段
-     * @param {string} level - 教育水平
-     * @returns {boolean} 是否为国际体系
-     */
-    isInternationalLevel(stage, level) {
-        const internationalLevels = {
-            '小学': ['民办双语'],
-            '初中': ['民办双语'],
-            '高中': ['公立国际部', '民办国际化学校', '海外高中'],
-            '大学': ['海外大学', '海外硕士'],
-            '博士': ['海外博士']
-        };
-        
-        return internationalLevels[stage] && internationalLevels[stage].includes(level);
-    }
 
-    /**
-     * 检查路径是否包含免高考特征
-     * @param {Object} path - 路径对象
-     * @returns {boolean} 是否免高考
-     */
-    hasNoGaokaoFeature(path) {
-        if (!path || !path.nodes || !Array.isArray(path.nodes)) {
-            return false;
-        }
-        
-        return path.nodes.some(node => 
-            node.stage === '高中' && 
-            (node.level === '公立国际部' || node.level === '民办国际化学校')
-        );
-    }
 
     /**
      * 应用教育阶段筛选
@@ -200,44 +128,6 @@ class PathFilterService {
         });
     }
 
-    /**
-     * 应用特征标签筛选
-     * @param {Array} paths - 路径列表
-     * @param {Array} features - 特征标签列表
-     * @returns {Array} 筛选后的路径列表
-     */
-    filterByFeatures(paths, features) {
-        if (!paths || !Array.isArray(paths) || !features || features.length === 0) {
-            return paths || [];
-        }
-        
-        let filteredPaths = [...paths];
-        
-        features.forEach(feature => {
-            switch (feature) {
-                case '免高考':
-                    filteredPaths = filteredPaths.filter(path => this.hasNoGaokaoFeature(path));
-                    break;
-                case '费用最低':
-                    if (filteredPaths.length > 0) {
-                        const minCost = Math.min(...filteredPaths.map(path => this.getPathTotalCost(path)));
-                        filteredPaths = filteredPaths.filter(path => this.getPathTotalCost(path) === minCost);
-                    }
-                    break;
-                case '无转轨':
-                    filteredPaths = filteredPaths.filter(path => this.getPathTransitionCount(path) === 0);
-                    break;
-                case '最常见':
-                    if (filteredPaths.length > 0) {
-                        const maxPrevalence = Math.max(...filteredPaths.map(path => path.prevalence || 0));
-                        filteredPaths = filteredPaths.filter(path => (path.prevalence || 0) === maxPrevalence);
-                    }
-                    break;
-            }
-        });
-        
-        return filteredPaths;
-    }
 
     /**
      * 对路径进行排序
@@ -254,13 +144,20 @@ class PathFilterService {
         
         switch (sortBy) {
             case 'prevalence':
+                // 按常见度由高到低排序
                 sortedPaths.sort((a, b) => (b.prevalence || 0) - (a.prevalence || 0));
                 break;
-            case 'cost':
+            case 'cost-high':
+                // 按总费用由高到低排序
+                sortedPaths.sort((a, b) => this.getPathTotalCost(b) - this.getPathTotalCost(a));
+                break;
+            case 'cost-low':
+                // 按总费用由低到高排序
                 sortedPaths.sort((a, b) => this.getPathTotalCost(a) - this.getPathTotalCost(b));
                 break;
-            case 'transitions':
-                sortedPaths.sort((a, b) => this.getPathTransitionCount(a) - this.getPathTransitionCount(b));
+            case 'cost':
+                // 兼容旧的cost排序（由低到高）
+                sortedPaths.sort((a, b) => this.getPathTotalCost(a) - this.getPathTotalCost(b));
                 break;
             default:
                 // 默认按常见度排序
@@ -291,11 +188,6 @@ class PathFilterService {
         // 应用费用区间筛选
         if (filterState.costRange) {
             filteredPaths = this.filterByCostRange(filteredPaths, filterState.costRange);
-        }
-        
-        // 应用特征标签筛选
-        if (filterState.features && filterState.features.length > 0) {
-            filteredPaths = this.filterByFeatures(filteredPaths, filterState.features);
         }
         
         // 应用排序
@@ -362,7 +254,6 @@ class PathFilterService {
         this.filterState = {
             educationStages: {},
             costRange: { min: 0, max: 0 },
-            features: [],
             sortBy: 'prevalence'
         };
     }

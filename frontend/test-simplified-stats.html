@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简化统计卡片测试</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .test-info {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #1976d2;
+        }
+        .test-info h3 {
+            margin: 0 0 10px 0;
+            color: #1976d2;
+        }
+        .test-info ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .test-info li {
+            margin: 5px 0;
+        }
+        .verification-item {
+            background: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border-left: 3px solid #4A90A4;
+        }
+        .verification-item.pass {
+            border-left-color: #10B981;
+            background: #f0fdf4;
+        }
+        .verification-item.fail {
+            border-left-color: #EF4444;
+            background: #fef2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <h1 class="title">简化统计卡片测试</h1>
+            <p class="subtitle">测试只有可行路径和不可行路径的统计卡片</p>
+        </header>
+
+        <!-- 测试说明 -->
+        <div class="test-info">
+            <h3>测试说明</h3>
+            <p>此页面用于测试简化后的统计卡片功能，请验证以下功能：</p>
+            <ul>
+                <li><strong>统计卡片数量:</strong> 应该只显示2个卡片（可行路径、不可行路径）</li>
+                <li><strong>默认选中状态:</strong> 页面加载时"可行路径"卡片应该被选中（激活状态）</li>
+                <li><strong>默认显示内容:</strong> 页面加载时应该只显示可行路径</li>
+                <li><strong>点击切换功能:</strong> 点击卡片可以切换显示不同类型的路径</li>
+                <li><strong>布局效果:</strong> 两个卡片应该居中显示，布局美观</li>
+            </ul>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <!-- 输入表单 -->
+            <section class="input-section">
+                <div class="form-container">
+                    <h2 class="section-title">基本信息</h2>
+                    
+                    <form id="educationForm" class="education-form">
+                        <!-- 当前教育阶段 -->
+                        <div class="form-group">
+                            <label for="currentStage" class="form-label">当前教育阶段</label>
+                            <select id="currentStage" name="currentStage" class="form-select" required>
+                                <option value="">请选择当前教育阶段</option>
+                                <option value="幼儿园">幼儿园</option>
+                                <option value="小学">小学</option>
+                                <option value="初中">初中</option>
+                                <option value="高中">高中</option>
+                                <option value="大学">大学</option>
+                                <option value="研究生">研究生</option>
+                                <option value="博士">博士</option>
+                            </select>
+                        </div>
+
+                        <!-- 当前年级 -->
+                        <div class="form-group">
+                            <label for="currentGrade" class="form-label">当前年级</label>
+                            <input type="number" id="currentGrade" name="currentGrade" class="form-input" 
+                                   min="1" max="12" placeholder="请输入年级（1-12）" required>
+                        </div>
+
+                        <!-- 当前教育水平 -->
+                        <div class="form-group">
+                            <label for="currentLevel" class="form-label">当前教育水平</label>
+                            <select id="currentLevel" name="currentLevel" class="form-select" required disabled>
+                                <option value="">请先选择教育阶段</option>
+                            </select>
+                        </div>
+
+                        <!-- 目标阶段 -->
+                        <div class="form-group">
+                            <label for="targetStage" class="form-label">目标教育阶段</label>
+                            <select id="targetStage" name="targetStage" class="form-select" required disabled>
+                                <option value="">请先选择当前教育阶段</option>
+                            </select>
+                        </div>
+
+                        <!-- 提交按钮 -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary" disabled>
+                                <span class="btn-text">开始规划</span>
+                                <span class="btn-loading" style="display: none;">分析中...</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- 结果展示区域 -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-container">
+                    <h2 class="section-title">路径分析结果</h2>
+                    
+                    <!-- 统计信息 -->
+                    <div class="stats-container" id="statsContainer">
+                        <!-- 统计信息将通过JavaScript动态生成 -->
+                    </div>
+
+                    <!-- 路径列表 -->
+                    <div class="paths-container" id="pathsContainer">
+                        <!-- 路径列表将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>&copy; 2024 教育路径规划系统. 简化统计卡片测试页面.</p>
+        </footer>
+    </div>
+
+    <!-- 加载脚本 -->
+    <script src="js/education-data.js"></script>
+    <script src="js/path-finder.js"></script>
+    <script src="js/app.js"></script>
+    
+    <!-- 验证脚本 -->
+    <script>
+        // 页面加载完成后进行验证
+        document.addEventListener('DOMContentLoaded', function() {
+            // 等待一段时间让页面完全加载
+            setTimeout(function() {
+                verifySimplifiedStats();
+            }, 1000);
+        });
+
+        function verifySimplifiedStats() {
+            const statsContainer = document.getElementById('statsContainer');
+            if (!statsContainer) return;
+
+            const statCards = statsContainer.querySelectorAll('.stat-card');
+            const verificationResults = [];
+
+            // 验证1: 检查卡片数量
+            const cardCount = statCards.length;
+            const hasCorrectCount = cardCount === 2;
+            verificationResults.push({
+                test: '统计卡片数量',
+                result: hasCorrectCount,
+                details: `期望2个卡片，实际${cardCount}个卡片`
+            });
+
+            // 验证2: 检查卡片内容
+            const cardLabels = Array.from(statCards).map(card => {
+                const labelElement = card.querySelector('.stat-label');
+                return labelElement ? labelElement.textContent : '';
+            });
+            const hasCorrectLabels = cardLabels.includes('可行路径') && cardLabels.includes('不可行路径');
+            verificationResults.push({
+                test: '卡片标签内容',
+                result: hasCorrectLabels,
+                details: `卡片标签: ${cardLabels.join(', ')}`
+            });
+
+            // 验证3: 检查默认选中状态
+            const activeCard = statsContainer.querySelector('.stat-card.active');
+            const hasActiveCard = activeCard !== null;
+            const isFeasibleActive = hasActiveCard && activeCard.querySelector('.stat-label').textContent === '可行路径';
+            verificationResults.push({
+                test: '默认选中状态',
+                result: isFeasibleActive,
+                details: hasActiveCard ? `当前选中: ${activeCard.querySelector('.stat-label').textContent}` : '没有选中任何卡片'
+            });
+
+            // 验证4: 检查布局样式
+            const computedStyle = window.getComputedStyle(statsContainer);
+            const gridColumns = computedStyle.gridTemplateColumns;
+            const hasCorrectLayout = gridColumns.includes('1fr') && gridColumns.split(' ').length === 2;
+            verificationResults.push({
+                test: '布局样式',
+                result: hasCorrectLayout,
+                details: `网格布局: ${gridColumns}`
+            });
+
+            // 显示验证结果
+            displayVerificationResults(verificationResults);
+        }
+
+        function displayVerificationResults(results) {
+            const resultsSection = document.getElementById('resultsSection');
+            if (!resultsSection) return;
+
+            let verificationHTML = '<div style="background: #f8f9fa; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #4A90A4;">';
+            verificationHTML += '<h3 style="margin: 0 0 15px 0; color: #2c3e50;">功能验证结果</h3>';
+
+            results.forEach(result => {
+                const statusClass = result.result ? 'pass' : 'fail';
+                const statusIcon = result.result ? '✅' : '❌';
+                verificationHTML += `
+                    <div class="verification-item ${statusClass}">
+                        <strong>${statusIcon} ${result.test}:</strong> ${result.result ? '通过' : '失败'}
+                        <br><small>${result.details}</small>
+                    </div>
+                `;
+            });
+
+            const allPassed = results.every(r => r.result);
+            verificationHTML += `
+                <div style="margin-top: 15px; padding: 10px; background: ${allPassed ? '#f0fdf4' : '#fef2f2'}; border-radius: 4px; border-left: 3px solid ${allPassed ? '#10B981' : '#EF4444'};">
+                    <strong>总体结果:</strong> ${allPassed ? '✅ 所有验证通过' : '❌ 部分验证失败'}
+                </div>
+            `;
+
+            verificationHTML += '</div>';
+
+            // 在结果区域顶部插入验证结果
+            const resultsContainer = resultsSection.querySelector('.results-container');
+            if (resultsContainer) {
+                resultsContainer.insertAdjacentHTML('afterbegin', verificationHTML);
+            }
+        }
+    </script>
+</body>
+</html>

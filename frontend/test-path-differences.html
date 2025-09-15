@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>路径差异高亮样式测试</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: var(--gray-50);
+        }
+        .test-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .example-section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>路径差异高亮样式测试</h1>
+        <p>这里展示了修改后的路径差异高亮效果，去掉了黄色背景，只保留橙黄色文字。</p>
+        
+        <div class="example-section">
+            <h3>修改前效果（参考）</h3>
+            <p>原来的样式有黄色背景、内边距、圆角等装饰效果</p>
+        </div>
+
+        <div class="example-section">
+            <h3>修改后效果（当前样式）</h3>
+            <div class="paths-container">
+                <!-- 路径1 - 基准路径 -->
+                <div class="path-card collapsed" data-path-index="0">
+                    <div class="path-header clickable" data-toggle-path="0">
+                        <div class="path-info">
+                            <div class="path-first-row">
+                                <span class="path-title">路径 1</span>
+                                <span class="path-cost">总费用 ¥235,000</span>
+                            </div>
+                            <div class="path-second-row">
+                                <span class="path-description">幼儿园-公立 → 小学-公立 → 初中-公立 → 高中-公立 → 大学-国内公办</span>
+                                <div class="path-toggle-icon">
+                                    <span class="toggle-arrow">▼</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 路径2 - 有差异的路径 -->
+                <div class="path-card collapsed" data-path-index="1">
+                    <div class="path-header clickable" data-toggle-path="1">
+                        <div class="path-info">
+                            <div class="path-first-row">
+                                <span class="path-title">路径 2</span>
+                                <span class="path-cost">总费用 ¥315,000</span>
+                            </div>
+                            <div class="path-second-row">
+                                <span class="path-description">幼儿园-公立 → 小学-公立 → 初中-公立 → 高中-公立 → <span class="path-difference">大学-国内民办</span></span>
+                                <div class="path-toggle-icon">
+                                    <span class="toggle-arrow">▼</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 路径3 - 有多个差异的路径 -->
+                <div class="path-card collapsed" data-path-index="2">
+                    <div class="path-header clickable" data-toggle-path="2">
+                        <div class="path-info">
+                            <div class="path-first-row">
+                                <span class="path-title">路径 3</span>
+                                <span class="path-cost">总费用 ¥587,000</span>
+                            </div>
+                            <div class="path-second-row">
+                                <span class="path-description">幼儿园-公立 → <span class="path-difference">小学-民办双语</span> → <span class="path-difference">初中-民办双语</span> → 高中-公立 → <span class="path-difference">大学-中外合作办学</span></span>
+                                <div class="path-toggle-icon">
+                                    <span class="toggle-arrow">▼</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 路径4 - 更多差异 -->
+                <div class="path-card collapsed" data-path-index="3">
+                    <div class="path-header clickable" data-toggle-path="3">
+                        <div class="path-info">
+                            <div class="path-first-row">
+                                <span class="path-title">路径 4</span>
+                                <span class="path-cost">总费用 ¥1,200,000</span>
+                            </div>
+                            <div class="path-second-row">
+                                <span class="path-description"><span class="path-difference">幼儿园-民办国际化学校</span> → <span class="path-difference">小学-民办国际化学校</span> → <span class="path-difference">初中-民办国际化学校</span> → <span class="path-difference">高中-民办国际化学校</span> → <span class="path-difference">大学-海外大学</span></span>
+                                <div class="path-toggle-icon">
+                                    <span class="toggle-arrow">▼</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="example-section">
+            <h3>样式说明</h3>
+            <ul>
+                <li><strong>修改前</strong>：差异节点有黄色背景 (#FEF3C7)、内边距、圆角、阴影等装饰效果</li>
+                <li><strong>修改后</strong>：差异节点只有橙黄色文字 (#D97706) 和加粗效果，更简洁清晰</li>
+                <li><strong>优势</strong>：
+                    <ul>
+                        <li>视觉更简洁，不会过于突出干扰阅读</li>
+                        <li>橙黄色文字在白色背景上有足够的对比度</li>
+                        <li>加粗效果增强了差异的可读性</li>
+                        <li>去掉装饰后更适合在密集的文本中使用</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 实现路径卡片展开收起功能
+        function togglePathCard(pathIndex) {
+            const pathCard = document.querySelector(`.path-card[data-path-index="${pathIndex}"]`);
+            if (!pathCard) return;
+            
+            const isExpanded = pathCard.classList.contains('expanded');
+            
+            if (isExpanded) {
+                pathCard.classList.remove('expanded');
+                pathCard.classList.add('collapsed');
+            } else {
+                pathCard.classList.remove('collapsed');
+                pathCard.classList.add('expanded');
+            }
+        }
+
+        // 绑定点击事件
+        document.addEventListener('DOMContentLoaded', () => {
+            const pathHeaders = document.querySelectorAll('.path-header[data-toggle-path]');
+            pathHeaders.forEach(header => {
+                header.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pathIndex = header.dataset.togglePath;
+                    togglePathCard(pathIndex);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

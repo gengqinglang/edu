@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>步骤条件样式测试</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: var(--gray-50);
+        }
+        .test-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .example-section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>步骤条件样式修改测试</h1>
+        <p>删除"目标阶段费用"模块，条件内容放在标题下方，使用 #01BCD6 颜色和引号包裹</p>
+        
+        <div class="example-section">
+            <h3>修改后效果</h3>
+            <div class="path-steps">
+                <!-- 有条件的步骤卡片 -->
+                <div class="path-step">
+                    <div class="step-header">
+                        <span class="step-stage-level">小学-公立</span>
+                        <span class="step-total-cost">¥25,000</span>
+                    </div>
+                    <div class="step-conditions">"需满足小学学区户籍与房产要求"</div>
+                    <div class="step-content">
+                        <div class="education-level-features">
+                            <div class="features-header">
+                                <span class="features-title">教育特点</span>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                            <div class="features-content" style="display: none;">
+                                <p>公立小学教育特点说明...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 另一个有条件的步骤卡片 -->
+                <div class="path-step">
+                    <div class="step-header">
+                        <span class="step-stage-level">初中-民办双语</span>
+                        <span class="step-total-cost">¥120,000</span>
+                    </div>
+                    <div class="step-conditions">"需通过学校入学测试，英语水平达到一定要求"</div>
+                    <div class="step-content">
+                        <div class="education-level-features">
+                            <div class="features-header">
+                                <span class="features-title">教育特点</span>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                            <div class="features-content" style="display: none;">
+                                <p>民办双语初中教育特点说明...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 无条件的步骤卡片 -->
+                <div class="path-step">
+                    <div class="step-header">
+                        <span class="step-stage-level">高中-公立</span>
+                        <span class="step-total-cost">¥18,000</span>
+                    </div>
+                    <div class="step-content">
+                        <div class="education-level-features">
+                            <div class="features-header">
+                                <span class="features-title">教育特点</span>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                            <div class="features-content" style="display: none;">
+                                <p>公立高中教育特点说明...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 长条件文案的步骤卡片 -->
+                <div class="path-step">
+                    <div class="step-header">
+                        <span class="step-stage-level">大学-海外大学</span>
+                        <span class="step-total-cost">¥800,000</span>
+                    </div>
+                    <div class="step-conditions">"需要雅思7.0以上成绩，GPA达到3.5以上，提供完整的申请材料包括个人陈述、推荐信等"</div>
+                    <div class="step-content">
+                        <div class="education-level-features">
+                            <div class="features-header">
+                                <span class="features-title">教育特点</span>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                            <div class="features-content" style="display: none;">
+                                <p>海外大学教育特点说明...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="example-section">
+            <h3>修改对比</h3>
+            <div class="comparison">
+                <div>
+                    <h4>修改前</h4>
+                    <ul>
+                        <li>有"目标阶段费用"详细模块</li>
+                        <li>条件文案在底部，格式："条件：xxx"</li>
+                        <li>费用信息占用较多空间</li>
+                        <li>布局较为复杂</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>修改后</h4>
+                    <ul>
+                        <li><strong>删除</strong>了"目标阶段费用"模块</li>
+                        <li><strong>条件文案</strong>放在标题下方</li>
+                        <li><strong>颜色</strong>：#01BCD6（青蓝色）</li>
+                        <li><strong>格式</strong>：引号包裹 "xxx"</li>
+                        <li><strong>样式</strong>：斜体显示，突出条件信息</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="example-section">
+            <h3>样式特点</h3>
+            <ul>
+                <li><strong>位置</strong>：条件文案紧跟在步骤标题下方，层次清晰</li>
+                <li><strong>颜色</strong>：#01BCD6 青蓝色，与主题色形成对比，易于识别</li>
+                <li><strong>格式</strong>：用引号包裹，突出这是条件或要求</li>
+                <li><strong>字体</strong>：斜体显示，增加视觉区分度</li>
+                <li><strong>简化</strong>：去掉了复杂的费用展示模块，界面更简洁</li>
+            </ul>
+        </div>
+
+        <div class="example-section">
+            <h3>颜色展示</h3>
+            <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1rem;">
+                <div style="width: 40px; height: 40px; background: #01BCD6; border-radius: 4px;"></div>
+                <span style="color: #01BCD6; font-style: italic; font-size: 1.1rem;">"条件文案使用的颜色效果"</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的交互功能
+        document.addEventListener('DOMContentLoaded', () => {
+            const featureHeaders = document.querySelectorAll('.features-header');
+            featureHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('.toggle-icon');
+                    if (content.style.display === 'none') {
+                        content.style.display = 'block';
+                        icon.textContent = '▲';
+                    } else {
+                        content.style.display = 'none';
+                        icon.textContent = '▼';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>路径排序调试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .debug-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .debug-title {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .path-debug {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .path-description {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .score-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .score-item {
+            background: white;
+            padding: 8px;
+            border-radius: 3px;
+            border: 1px solid #dee2e6;
+        }
+        .score-label {
+            font-size: 0.8em;
+            color: #666;
+            margin-bottom: 2px;
+        }
+        .score-value {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .match-score { color: #28a745; }
+        .prevalence-score { color: #17a2b8; }
+        .cost-score { color: #dc3545; }
+        .test-controls {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .test-controls label {
+            display: inline-block;
+            margin-right: 20px;
+            font-weight: bold;
+        }
+        .test-controls select {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .test-controls button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .test-controls button:hover {
+            background: #0056b3;
+        }
+        .console-output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>路径排序逻辑调试</h1>
+    
+    <div class="test-controls">
+        <label for="currentLevel">当前教育水平：</label>
+        <select id="currentLevel">
+            <option value="民办国际化学校">民办国际化学校</option>
+            <option value="公立">公立</option>
+            <option value="民办双语">民办双语</option>
+            <option value="外籍人员子女学校">外籍人员子女学校</option>
+            <option value="公立国际部">公立国际部</option>
+        </select>
+        <button onclick="debugPathSorting()">调试排序</button>
+        <button onclick="clearConsole()">清空控制台</button>
+    </div>
+
+    <div class="debug-section">
+        <h2 class="debug-title">排序结果详情</h2>
+        <div id="debugResults"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2 class="debug-title">控制台输出</h2>
+        <div id="consoleOutput" class="console-output"></div>
+    </div>
+
+    <!-- 引入必要的脚本 -->
+    <script src="js/match-score-calculator.js"></script>
+    <script src="js/path-ranker.js"></script>
+    
+    <script>
+        // 测试数据
+        const testPaths = [
+            {
+                nodes: [
+                    { stage: '高中', level: '民办国际化学校' },
+                    { stage: '大学', level: '海外大学' },
+                    { stage: '研究生', level: '海外硕士' }
+                ],
+                description: '国际体系完整路径：民办国际化学校 → 海外大学 → 海外硕士',
+                feasibility: 'feasible',
+                costBreakdown: { total: 2500000 },
+                totalConditions: []
+            },
+            {
+                nodes: [
+                    { stage: '高中', level: '民办国际化学校' },
+                    { stage: '大学', level: '国内公办' },
+                    { stage: '研究生', level: '海外硕士' }
+                ],
+                description: '混合路径：民办国际化学校 → 国内公办 → 海外硕士',
+                feasibility: 'feasible',
+                costBreakdown: { total: 1500000 },
+                totalConditions: []
+            },
+            {
+                nodes: [
+                    { stage: '高中', level: '公立' },
+                    { stage: '大学', level: '国内公办' },
+                    { stage: '研究生', level: '国内硕士' }
+                ],
+                description: '传统路径：公立 → 国内公办 → 国内硕士',
+                feasibility: 'feasible',
+                costBreakdown: { total: 800000 },
+                totalConditions: []
+            },
+            {
+                nodes: [
+                    { stage: '高中', level: '民办双语' },
+                    { stage: '大学', level: '海外大学' },
+                    { stage: '研究生', level: '海外硕士' }
+                ],
+                description: '国际双语路径：民办双语 → 海外大学 → 海外硕士',
+                feasibility: 'feasible',
+                costBreakdown: { total: 2200000 },
+                totalConditions: []
+            },
+            {
+                nodes: [
+                    { stage: '高中', level: '外籍人员子女学校' },
+                    { stage: '大学', level: '海外大学' },
+                    { stage: '研究生', level: '海外硕士' }
+                ],
+                description: '外籍学校路径：外籍人员子女学校 → 海外大学 → 海外硕士',
+                feasibility: 'feasible',
+                costBreakdown: { total: 2800000 },
+                totalConditions: []
+            }
+        ];
+
+        // 初始化服务
+        const matchScoreCalculator = new MatchScoreCalculatorService();
+        const pathRanker = new PathRankerService();
+
+        function log(message) {
+            const consoleOutput = document.getElementById('consoleOutput');
+            const timestamp = new Date().toLocaleTimeString();
+            consoleOutput.textContent += `[${timestamp}] ${message}\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        function clearConsole() {
+            document.getElementById('consoleOutput').textContent = '';
+        }
+
+        function debugPathSorting() {
+            const currentLevel = document.getElementById('currentLevel').value;
+            log(`开始调试排序，当前教育水平: ${currentLevel}`);
+            
+            // 计算每个路径的详细分数
+            const pathsWithScores = testPaths.map((path, index) => {
+                const matchScore = matchScoreCalculator.calculatePathMatchScore(path, currentLevel);
+                const prevalenceScore = pathRanker.calculatePrevalenceScore(path);
+                const costScore = pathRanker.calculateCostScore(path);
+                
+                log(`路径 ${index + 1}: ${path.description}`);
+                log(`  匹配度: ${(matchScore * 100).toFixed(1)}%`);
+                log(`  常见度: ${(prevalenceScore * 100).toFixed(1)}%`);
+                log(`  费用分数: ${(costScore * 100).toFixed(1)}%`);
+                log(`  总费用: ¥${path.costBreakdown.total.toLocaleString()}`);
+                
+                return {
+                    ...path,
+                    matchScore,
+                    prevalenceScore,
+                    costScore
+                };
+            });
+
+            // 使用新的排序方法
+            const sortedPaths = pathRanker.rankPathsByCurrentState(testPaths, currentLevel);
+            
+            log(`\n排序结果:`);
+            sortedPaths.forEach((path, index) => {
+                const matchScore = matchScoreCalculator.calculatePathMatchScore(path, currentLevel);
+                const prevalenceScore = pathRanker.calculatePrevalenceScore(path);
+                const costScore = pathRanker.calculateCostScore(path);
+                
+                log(`  ${index + 1}. ${path.description}`);
+                log(`     匹配度: ${(matchScore * 100).toFixed(1)}% | 常见度: ${(prevalenceScore * 100).toFixed(1)}% | 费用: ¥${path.costBreakdown.total.toLocaleString()}`);
+            });
+
+            // 显示排序结果
+            const container = document.getElementById('debugResults');
+            container.innerHTML = sortedPaths.map((path, index) => {
+                const matchScore = matchScoreCalculator.calculatePathMatchScore(path, currentLevel);
+                const prevalenceScore = pathRanker.calculatePrevalenceScore(path);
+                const costScore = pathRanker.calculateCostScore(path);
+                
+                return `
+                    <div class="path-debug">
+                        <div class="path-description">排序 ${index + 1}: ${path.description}</div>
+                        <div class="score-details">
+                            <div class="score-item">
+                                <div class="score-label">匹配度</div>
+                                <div class="score-value match-score">${(matchScore * 100).toFixed(1)}%</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="score-label">常见度</div>
+                                <div class="score-value prevalence-score">${(prevalenceScore * 100).toFixed(1)}%</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="score-label">费用分数</div>
+                                <div class="score-value cost-score">${(costScore * 100).toFixed(1)}%</div>
+                            </div>
+                            <div class="score-item">
+                                <div class="score-label">总费用</div>
+                                <div class="score-value">¥${path.costBreakdown.total.toLocaleString()}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 页面加载时自动运行一次调试
+        window.onload = function() {
+            debugPathSorting();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端修复测试</title>
+</head>
+<body>
+    <h1>前端修复测试</h1>
+    <div id="test-results"></div>
+
+    <script src="js/education-data.js"></script>
+    <script src="js/education-types.js"></script>
+    <script src="js/education-cost-data.js"></script>
+    <script src="js/education-grade-cost-data.js"></script>
+    <script src="js/cost-calculator.js"></script>
+    <script src="js/path-finder.js"></script>
+    <script src="js/path-clusterer.js"></script>
+    <script src="js/path-ranker.js"></script>
+    <script src="js/hint-generator.js"></script>
+
+    <script>
+        // 测试修复后的代码
+        try {
+            console.log('开始测试...');
+            
+            // 创建测试输入
+            const testInput = {
+                currentStage: '小学',
+                currentGrade: 4,
+                currentLevel: '普通私立',
+                targetStage: '研究生'
+            };
+            
+            console.log('测试输入:', testInput);
+            
+            // 创建路径查找器
+            const pathFinder = new EducationPathFinder();
+            
+            // 测试获取战略路线
+            console.log('测试获取战略路线...');
+            const strategicRoutes = pathFinder.getStrategicRoutes(testInput);
+            console.log('找到战略路线数量:', strategicRoutes.length);
+            
+            if (strategicRoutes.length > 0) {
+                console.log('第一个战略路线:', strategicRoutes[0]);
+                
+                // 测试获取具体路径
+                console.log('测试获取具体路径...');
+                const rankedPaths = pathFinder.getRankedPathsForRoute(strategicRoutes[0].id, testInput);
+                console.log('找到路径数量:', rankedPaths.length);
+            }
+            
+            // 测试战略分析
+            console.log('测试战略分析...');
+            const analysis = pathFinder.getStrategicAnalysis(testInput);
+            console.log('分析结果:', analysis);
+            
+            document.getElementById('test-results').innerHTML = `
+                <p style="color: green;">✅ 测试成功！</p>
+                <p>找到 ${strategicRoutes.length} 个战略路线</p>
+                <p>第一个路线: ${strategicRoutes[0]?.name || '无'}</p>
+            `;
+            
+        } catch (error) {
+            console.error('测试失败:', error);
+            document.getElementById('test-results').innerHTML = `
+                <p style="color: red;">❌ 测试失败: ${error.message}</p>
+            `;
+        }
+    </script>
+</body>
+</html>

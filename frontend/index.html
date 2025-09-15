@@ -80,6 +80,9 @@
                                 <span class="btn-text">开始规划</span>
                                 <span class="btn-loading" style="display: none;">分析中...</span>
                             </button>
+                            <button type="button" class="btn btn-secondary" id="resetPlanBtn" style="display: none;">
+                                重新规划
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -99,7 +102,7 @@
                     <div class="path-details-container" id="pathDetailsContainer" style="display: none;">
                         <div class="path-details-header">
                             <button class="btn btn-secondary" id="backToRoutesBtn">
-                                <span>← 返回教育方向</span>
+                                <span>← 返回</span>
                             </button>
                             <h3 class="path-details-title" id="pathDetailsTitle">路径详情</h3>
                         </div>
@@ -108,12 +111,16 @@
                         <div class="path-filters-container" id="pathFiltersContainer">
                             <!-- 筛选器区域 -->
                             <div class="filters-section">
-                                <div class="filters-header">
-                                    <h4>筛选与排序</h4>
-                                    <button class="btn btn-sm btn-outline" id="resetFiltersBtn">重置所有筛选条件</button>
+                                <div class="filters-header" id="filtersHeader">
+                                    <div class="filters-title-section">
+                                        <h4>筛选与排序</h4>
+                                        <span class="toggle-filters-icon" id="toggleFiltersBtn">▶</span>
+                                    </div>
+                                    <span class="reset-filters-text" id="resetFiltersBtn" title="重置所有筛选条件">重置</span>
                                 </div>
                                 
-                                <div class="filters-grid">
+                                <div class="filters-content" id="filtersContent" style="display: none;">
+                                    <div class="filters-grid">
                                     <!-- 教育阶段筛选 -->
                                     <div class="filter-group">
                                         <label class="filter-label">锁定关键阶段：</label>
@@ -133,66 +140,48 @@
                                         </div>
                                     </div>
                                     
-                                    <!-- 特征标签筛选 -->
-                                    <div class="filter-group">
-                                        <label class="filter-label">路径特征：</label>
-                                        <div class="feature-tags" id="featureTags">
-                                            <label class="feature-tag">
-                                                <input type="checkbox" value="免高考">
-                                                <span>🚀 免高考</span>
-                                            </label>
-                                            <label class="feature-tag">
-                                                <input type="checkbox" value="费用最低">
-                                                <span>💰 费用最低</span>
-                                            </label>
-                                            <label class="feature-tag">
-                                                <input type="checkbox" value="无转轨">
-                                                <span>🔄 无转轨</span>
-                                            </label>
-                                            <label class="feature-tag">
-                                                <input type="checkbox" value="最常见">
-                                                <span>⭐ 最常见</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    
                                     <!-- 排序选择 -->
                                     <div class="filter-group">
                                         <label class="filter-label">排序方式：</label>
                                         <div class="sort-buttons">
                                             <button type="button" class="sort-btn" data-sort="prevalence">
-                                                <span class="sort-icon">📊</span>
                                                 <span class="sort-text">按常见度排序</span>
                                             </button>
-                                            <button type="button" class="sort-btn" data-sort="cost">
-                                                <span class="sort-icon">💰</span>
-                                                <span class="sort-text">按总费用排序</span>
+                                            <button type="button" class="sort-btn" data-sort="cost-high">
+                                                <span class="sort-text">按总费用由高到低</span>
                                             </button>
-                                            <button type="button" class="sort-btn" data-sort="transitions">
-                                                <span class="sort-icon">🔄</span>
-                                                <span class="sort-text">按转轨次数排序</span>
+                                            <button type="button" class="sort-btn" data-sort="cost-low">
+                                                <span class="sort-text">按总费用由低到高</span>
                                             </button>
                                         </div>
                                     </div>
-                                </div>
-                                
-                                <!-- 费用区间筛选 - 独立一行 -->
-                                <div class="cost-range-section">
-                                    <label class="filter-label">总费用区间：</label>
-                                    <div class="cost-range-filter">
-                                        <input type="range" id="costRangeMin" class="cost-range-input" min="0" max="1000000" step="10000">
-                                        <input type="range" id="costRangeMax" class="cost-range-input" min="0" max="1000000" step="10000">
-                                        <div class="cost-range-display">
-                                            <span id="costRangeMinDisplay">0</span> - <span id="costRangeMaxDisplay">0</span> 元
+                                    
+                                    <!-- 费用区间筛选 -->
+                                    <div class="filter-group cost-range-group">
+                                        <label class="filter-label">总费用区间：</label>
+                                        <div class="cost-range-filter">
+                                            <div class="dual-range-slider">
+                                                <input type="range" id="costRangeMin" class="cost-range-input range-min" min="0" max="1000000" step="10000">
+                                                <input type="range" id="costRangeMax" class="cost-range-input range-max" min="0" max="1000000" step="10000">
+                                            </div>
+                                            <div class="cost-range-display">
+                                                <span id="costRangeMinDisplay">0</span> - <span id="costRangeMaxDisplay">0</span> 元
+                                            </div>
                                         </div>
+                                    </div>
+                                    
+                                    <!-- 结果统计 -->
+                                    <div class="results-stats" id="resultsStats">
+                                        <span class="results-count">为您找到了 <strong id="filteredPathsCount">0</strong> 条匹配路径</span>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <!-- 结果统计 -->
-                            <div class="results-stats" id="resultsStats">
-                                <span class="results-count">为您找到了 <strong id="filteredPathsCount">0</strong> 条匹配路径</span>
-                            </div>
+                        </div>
+
+                        <!-- 路径差异提示 -->
+                        <div class="path-difference-hint">
+                            <span class="hint-icon">💡</span>
+                            <span class="hint-text">橙色标记表示与路径1的不同之处</span>
                         </div>
 
                         <!-- 路径列表 -->
