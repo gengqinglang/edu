@@ -2048,22 +2048,32 @@ function toggleFeatures(featuresId) {
      * 显示教育水平特点模态框
      */
     showEducationLevelModal() {
-        const modal = document.getElementById('educationLevelModal');
-        if (modal) {
-            modal.style.display = 'flex';
-            // 初始化显示幼儿园阶段的数据
-            this.updateModalLevelsComparison('幼儿园');
+        try {
+            console.log('显示教育水平模态框');
+            const modal = document.getElementById('educationLevelModal');
+            console.log('模态框元素:', modal);
             
-            // 阻止页面滚动
-            document.body.style.overflow = 'hidden';
-            
-            // 添加ESC键关闭功能
-            this.modalEscHandler = (e) => {
-                if (e.key === 'Escape') {
-                    this.hideEducationLevelModal();
-                }
-            };
-            document.addEventListener('keydown', this.modalEscHandler);
+            if (modal) {
+                modal.style.display = 'flex';
+                // 初始化显示幼儿园阶段的数据
+                this.updateModalLevelsComparison('幼儿园');
+                
+                // 阻止页面滚动
+                document.body.style.overflow = 'hidden';
+                
+                // 添加ESC键关闭功能
+                this.modalEscHandler = (e) => {
+                    if (e.key === 'Escape') {
+                        this.hideEducationLevelModal();
+                    }
+                };
+                document.addEventListener('keydown', this.modalEscHandler);
+                console.log('模态框显示成功');
+            } else {
+                console.error('找不到模态框元素');
+            }
+        } catch (error) {
+            console.error('显示模态框时出错:', error);
         }
     }
 
@@ -2090,22 +2100,36 @@ function toggleFeatures(featuresId) {
      * 更新模态框中的教育水平对比内容
      */
     updateModalLevelsComparison(stage) {
-        const levelsComparison = document.getElementById('levelsComparison');
-        if (!levelsComparison) return;
+        try {
+            console.log('更新模态框内容，阶段:', stage);
+            const levelsComparison = document.getElementById('levelsComparison');
+            console.log('levelsComparison元素:', levelsComparison);
+            
+            if (!levelsComparison) {
+                console.error('找不到levelsComparison元素');
+                return;
+            }
 
-        // 获取该阶段的所有教育水平
-        const levels = this.stageLevelMapping[stage] || [];
-        
-        if (levels.length === 0) {
-            levelsComparison.innerHTML = '<p class="text-muted">该阶段暂无详细特点信息</p>';
+            // 获取该阶段的所有教育水平
+            const levels = this.stageLevelMapping[stage] || [];
+            console.log('该阶段的教育水平:', levels);
+            
+            if (levels.length === 0) {
+                levelsComparison.innerHTML = '<p class="text-muted">该阶段暂无详细特点信息</p>';
+                return;
+            }
+        } catch (error) {
+            console.error('更新模态框内容时出错:', error);
             return;
         }
 
         // 生成每个教育水平的卡片
         const levelCards = levels.map(level => {
+            console.log(`获取 ${stage}-${level} 的特点信息`);
             const featureInfo = this.educationLevelFeatures.getFullFeatureInfo(stage, level);
+            console.log(`${stage}-${level} 特点信息:`, featureInfo);
             
-            if (!featureInfo) {
+            if (!featureInfo || !featureInfo.hasInfo) {
                 return `
                     <div class="level-card">
                         <div class="level-header">
@@ -2119,7 +2143,7 @@ function toggleFeatures(featuresId) {
             }
 
             // 处理特点文本，转换Markdown样式的粗体为HTML
-            const formattedFeatures = featureInfo.features.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            const formattedFeatures = featureInfo.features ? featureInfo.features.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') : '暂无特点信息';
 
             return `
                 <div class="level-card">
@@ -2144,7 +2168,10 @@ function toggleFeatures(featuresId) {
             `;
         }).join('');
 
+        console.log('生成的HTML内容长度:', levelCards.length);
+        console.log('生成的HTML内容预览:', levelCards.substring(0, 200));
         levelsComparison.innerHTML = levelCards;
+        console.log('模态框内容更新完成');
     }
 }
 
